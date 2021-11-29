@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.PatientCategoriesMapper">
+    
+    <resultMap type="PatientCategories" id="PatientCategoriesResult">
+        <result property="id"    column="id"    />
+        <result property="classificationCode"    column="classification_code"    />
+    </resultMap>
+
+    <sql id="selectPatientCategoriesVo">
+        select id, classification_code from patient_categories
+    </sql>
+
+    <select id="selectPatientCategoriesList" parameterType="PatientCategories" resultMap="PatientCategoriesResult">
+        <include refid="selectPatientCategoriesVo"/>
+        <where>  
+            <if test="classificationCode != null  and classificationCode != ''"> and classification_code = #{classificationCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectPatientCategoriesById" parameterType="Long" resultMap="PatientCategoriesResult">
+        <include refid="selectPatientCategoriesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPatientCategories" parameterType="PatientCategories" useGeneratedKeys="true" keyProperty="id">
+        insert into patient_categories
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classificationCode != null  and classificationCode != ''">classification_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classificationCode != null  and classificationCode != ''">#{classificationCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePatientCategories" parameterType="PatientCategories">
+        update patient_categories
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classificationCode != null  and classificationCode != ''">classification_code = #{classificationCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePatientCategoriesById" parameterType="Long">
+        delete from patient_categories where id = #{id}
+    </delete>
+
+    <delete id="deletePatientCategoriesByIds" parameterType="String">
+        delete from patient_categories where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

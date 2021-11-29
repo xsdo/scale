@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.ipa.mapper.IpaScaleQuestionsMapper">
+    
+    <resultMap type="IpaScaleQuestions" id="IpaScaleQuestionsResult">
+        <result property="id"    column="id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="answerA"    column="answer_a"    />
+        <result property="answerB"    column="answer_b"    />
+        <result property="answerC"    column="answer_c"    />
+        <result property="answerD"    column="answer_d"    />
+    </resultMap>
+
+    <sql id="selectIpaScaleQuestionsVo">
+        select id, scale_id, title, content, answer_a, answer_b, answer_c, answer_d from ipa_scale_questions
+    </sql>
+
+    <select id="selectIpaScaleQuestionsList" parameterType="IpaScaleQuestions" resultMap="IpaScaleQuestionsResult">
+        <include refid="selectIpaScaleQuestionsVo"/>
+        <where>  
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="answerA != null  and answerA != ''"> and answer_a = #{answerA}</if>
+            <if test="answerB != null  and answerB != ''"> and answer_b = #{answerB}</if>
+            <if test="answerC != null  and answerC != ''"> and answer_c = #{answerC}</if>
+            <if test="answerD != null  and answerD != ''"> and answer_d = #{answerD}</if>
+        </where>
+    </select>
+    
+    <select id="selectIpaScaleQuestionsById" parameterType="Long" resultMap="IpaScaleQuestionsResult">
+        <include refid="selectIpaScaleQuestionsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertIpaScaleQuestions" parameterType="IpaScaleQuestions" useGeneratedKeys="true" keyProperty="id">
+        insert into ipa_scale_questions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="answerA != null  and answerA != ''">answer_a,</if>
+            <if test="answerB != null  and answerB != ''">answer_b,</if>
+            <if test="answerC != null  and answerC != ''">answer_c,</if>
+            <if test="answerD != null  and answerD != ''">answer_d,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="answerA != null  and answerA != ''">#{answerA},</if>
+            <if test="answerB != null  and answerB != ''">#{answerB},</if>
+            <if test="answerC != null  and answerC != ''">#{answerC},</if>
+            <if test="answerD != null  and answerD != ''">#{answerD},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIpaScaleQuestions" parameterType="IpaScaleQuestions">
+        update ipa_scale_questions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="answerA != null  and answerA != ''">answer_a = #{answerA},</if>
+            <if test="answerB != null  and answerB != ''">answer_b = #{answerB},</if>
+            <if test="answerC != null  and answerC != ''">answer_c = #{answerC},</if>
+            <if test="answerD != null  and answerD != ''">answer_d = #{answerD},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIpaScaleQuestionsById" parameterType="Long">
+        delete from ipa_scale_questions where id = #{id}
+    </delete>
+
+    <delete id="deleteIpaScaleQuestionsByIds" parameterType="String">
+        delete from ipa_scale_questions where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

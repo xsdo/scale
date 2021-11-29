@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.eis.mapper.EisUserMapper">
+    
+    <resultMap type="EisUser" id="EisUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="telNumber"    column="tel_number"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="userType"    column="user_type"    />
+        <result property="password"    column="password"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag   "    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="loginDate"    column="login_date"    />
+        <result property="createDate"    column="create_date"    />
+    </resultMap>
+
+    <sql id="selectEisUserVo">
+        select user_id,user_name,tel_number,sex,age,user_type,password,status,del_flag,login_ip,login_date,create_date
+         from eis_user
+    </sql>
+
+    <select id="selectEisUserList" parameterType="EisUser" resultMap="EisUserResult">
+        <include refid="selectEisUserVo"/>
+        <where>
+            <if test="userName != null "> and user_name = #{userName}</if>
+            <if test="telNumber != null "> and tel_number = #{telNumber}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="delFlag != null "> and del_flag = #{delFlag}</if>
+            <if test="userType != null "> and user_type = #{userType}</if>
+        </where>
+    </select>
+    
+    <select id="selectEisUserById" parameterType="Long" resultMap="EisUserResult">
+        <include refid="selectEisUserVo"/>
+        where user_id = #{userId}
+    </select>
+    <select id="selectEisUserByTel" parameterType="String" resultMap="EisUserResult">
+        <include refid="selectEisUserVo"/>
+        where tel_number = #{telNumber}
+    </select>
+
+    <select id="selectEisUsers" parameterType="Long" resultMap="EisUserResult">
+        <include refid="selectEisUserVo"/>
+        where del_flag = #{delFlag}
+    </select>
+
+    <insert id="insertEisUser" parameterType="EisUser">
+        insert into eis_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null ">user_name,</if>
+            <if test="telNumber != null ">tel_number,</if>
+            <if test="sex != null ">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="userType != null ">user_type,</if>
+            <if test="password != null ">password,</if>
+            <if test="status != null ">status,</if>
+            <if test="delFlag != null ">del_flag,</if>
+            <if test="loginIp != null ">login_ip,</if>
+            <if test="loginDate != null ">login_date,</if>
+            <if test="createDate != null ">create_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null ">#{userName},</if>
+            <if test="telNumber != null ">#{telNumber},</if>
+            <if test="sex != null ">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="userType != null ">#{userType},</if>
+            <if test="password != null ">#{password},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="delFlag != null ">#{delFlag},</if>
+            <if test="loginIp != null ">#{loginIp},</if>
+            <if test="loginDate != null ">#{loginDate},</if>
+            <if test="createDate != null ">#{createDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEisUser" parameterType="EisUser">
+        update eis_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null ">user_name = #{userName},</if>
+            <if test="telNumber != null ">tel_number = #{telNumber},</if>
+            <if test="sex != null ">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="userType != null ">user_type = #{userType},</if>
+            <if test="password != null ">password = #{password},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="delFlag != null ">del_flag = #{delFlag},</if>
+            <if test="loginIp != null ">login_ip = #{loginIp},</if>
+            <if test="loginDate != null ">login_date = #{loginDate},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteEisUserById" parameterType="Long">
+        delete from eis_user where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteEisUserByIds" parameterType="String">
+        delete from eis_user where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+    
+</mapper>

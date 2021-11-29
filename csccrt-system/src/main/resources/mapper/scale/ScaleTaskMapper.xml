@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.scale.mapper.ScaleTaskMapper">
+    
+    <resultMap type="ScaleTask" id="ScaleTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="testCoding"    column="test_coding"    />
+        <result property="typeids"    column="typeIds"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="scaleId"    column="scale_id"    />
+<!--        <result property="scaleName"    column="scale_name"    />-->
+        <result property="typeFlag"    column="type_flag"    />
+    </resultMap>
+
+
+    <sql id="selectScaleTaskVo">
+        select task_id, user_id, user_name, patient_id, patient_name, workstation, test_coding, typeIds, task_status, del_flag, create_by, create_time, update_by, update_time, scale_id, type_flag from scale_task
+    </sql>
+
+    <sql id="selectScaleTaskVos">
+        select a.task_id, a.user_id, a.user_name, a.patient_id, a.patient_name, a.workstation, a.test_coding, a.typeIds,
+        a.task_status, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.scale_id, a.type_flag ,
+    </sql>
+
+    <select id="selectScaleTaskLists" parameterType="ScaleTask" resultMap="ScaleTaskResult">
+        <include refid="selectScaleTaskVos"/>
+        b.scale_name as scaleName
+        from scale_task a
+        left join scale_menu b
+        on a.scale_id = b.id
+        <where>
+            a.task_status!='3'
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and a.patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and a.patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and a.workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and a.test_coding = #{testCoding}</if>
+            <if test="typeids != null  and typeids != ''"> and a.typeIds = #{typeids}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and a.task_status = #{taskStatus}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
+            <if test="scaleId != null  and scaleId != ''"> and a.scale_id = #{scaleId}</if>
+            <if test="typeFlag != null  and typeFlag != ''"> and a.type_flag = #{typeFlag}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectScaleTaskLists1" parameterType="ScaleTask" resultMap="ScaleTaskResult">
+        <include refid="selectScaleTaskVo"/>
+        <where>
+            task_status!='3'
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and test_coding = #{testCoding}</if>
+            <if test="typeids != null  and typeids != ''"> and typeIds = #{typeids}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+            <if test="scaleId != null  and scaleId != ''"> and scale_id = #{scaleId}</if>
+            <if test="typeFlag != null  and typeFlag != ''"> and type_flag = #{typeFlag}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectScaleTaskList" parameterType="ScaleTask" resultMap="ScaleTaskResult">
+        <include refid="selectScaleTaskVos"/>
+        b.scale_name as scaleName
+        from scale_task a
+        left join scale_menu b
+        on a.scale_id = b.id
+        <where>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and a.patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and a.patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and a.workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and a.test_coding = #{testCoding}</if>
+            <if test="typeids != null  and typeids != ''"> and a.typeIds = #{typeids}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and a.task_status = #{taskStatus}</if>
+            <if test="delFlag != null  and delFlag != ''"> and a.del_flag = #{delFlag}</if>
+            <if test="scaleId != null  and scaleId != ''"> and a.scale_id = #{scaleId}</if>
+            <if test="typeFlag != null  and typeFlag != ''"> and a.type_flag = #{typeFlag}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+    <select id="selectScaleTaskList1" parameterType="ScaleTask" resultMap="ScaleTaskResult">
+        <include refid="selectScaleTaskVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and test_coding = #{testCoding}</if>
+            <if test="typeids != null  and typeids != ''"> and typeIds = #{typeids}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+            <if test="scaleId != null  and scaleId != ''"> and scale_id = #{scaleId}</if>
+            <if test="typeFlag != null  and typeFlag != ''"> and type_flag = #{typeFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleTaskById" parameterType="Long" resultMap="ScaleTaskResult">
+        <include refid="selectScaleTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertScaleTask" parameterType="ScaleTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into scale_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding,</if>
+            <if test="typeids != null  and typeids != ''">typeIds,</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="scaleId != null  and scaleId != ''">scale_id,</if>
+            <if test="typeFlag != null  and typeFlag != ''">type_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">#{testCoding},</if>
+            <if test="typeids != null  and typeids != ''">#{typeids},</if>
+            <if test="taskStatus != null  and taskStatus != ''">#{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="scaleId != null  and scaleId != ''">#{scaleId},</if>
+            <if test="typeFlag != null  and typeFlag != ''">#{typeFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleTask" parameterType="ScaleTask">
+        update scale_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding = #{testCoding},</if>
+            <if test="typeids != null  and typeids != ''">typeIds = #{typeids},</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status = #{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="scaleId != null  and scaleId != ''">scale_id = #{scaleId},</if>
+            <if test="typeFlag != null  and typeFlag != ''">type_flag = #{typeFlag},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteScaleTaskById" parameterType="Long">
+        delete from scale_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteScaleTaskByIds" parameterType="String">
+        delete from scale_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.PatientUserMapper">
+    
+    <resultMap type="PatientUser" id="PatientUserResult">
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="hospitalNumber"    column="hospital_number"    />
+        <result property="ward"    column="ward"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="job"    column="job"    />
+        <result property="education"    column="education"    />
+        <result property="nation"    column="nation"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="contanctInformation"    column="contanct_information"    />
+        <result property="source"    column="source"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="classificationCoding"    column="classification_coding"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPatientUserVo">
+        select patient_id, patient_name, sex, age, hospital_number,diagnosis,ward, test_date, job, education, nation, marital_status, birthday, contanct_information, source, classification_coding, del_flag, create_by, create_time, update_by, update_time from patient_user
+    </sql>
+
+    <select id="selectPatientUserList" parameterType="PatientUser" resultMap="PatientUserResult">
+        <include refid="selectPatientUserVo"/>
+        <where>  
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="hospitalNumber != null "> and hospital_number = #{hospitalNumber}</if>
+            <if test="ward != null  and ward != ''"> and ward = #{ward}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+            <if test="job != null  and job != ''"> and job = #{job}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="contanctInformation != null  and contanctInformation != ''"> and contanct_information = #{contanctInformation}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="diagnosis != null  and diagnosis != ''"> and diagnosis = #{diagnosis}</if>
+            <if test="classificationCoding != null  and classificationCoding != ''"> and classification_coding = #{classificationCoding}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectPatientUserById" parameterType="Long" resultMap="PatientUserResult">
+        <include refid="selectPatientUserVo"/>
+        where patient_id = #{patientId}
+    </select>
+        
+    <insert id="insertPatientUser" parameterType="PatientUser" useGeneratedKeys="true" keyProperty="patientId">
+        insert into patient_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="hospitalNumber != null ">hospital_number,</if>
+            <if test="ward != null  and ward != ''">ward,</if>
+            <if test="testDate != null ">test_date,</if>
+            <if test="job != null  and job != ''">job,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="nation != null  and nation != ''">nation,</if>
+            <if test="maritalStatus != null  and maritalStatus != ''">marital_status,</if>
+            <if test="birthday != null ">birthday,</if>
+            <if test="contanctInformation != null  and contanctInformation != ''">contanct_information,</if>
+            <if test="source != null  and source != ''">source,</if>
+            <if test="classificationCoding != null  and classificationCoding != ''">classification_coding,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="diagnosis != null  and diagnosis != ''"> diagnosis,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="hospitalNumber != null ">#{hospitalNumber},</if>
+            <if test="ward != null  and ward != ''">#{ward},</if>
+            <if test="testDate != null ">#{testDate},</if>
+            <if test="job != null  and job != ''">#{job},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="nation != null  and nation != ''">#{nation},</if>
+            <if test="maritalStatus != null  and maritalStatus != ''">#{maritalStatus},</if>
+            <if test="birthday != null ">#{birthday},</if>
+            <if test="contanctInformation != null  and contanctInformation != ''">#{contanctInformation},</if>
+            <if test="source != null  and source != ''">#{source},</if>
+            <if test="classificationCoding != null  and classificationCoding != ''">#{classificationCoding},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="diagnosis != null  and diagnosis != ''"> #{diagnosis},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePatientUser" parameterType="PatientUser">
+        update patient_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="hospitalNumber != null ">hospital_number = #{hospitalNumber},</if>
+            <if test="ward != null  and ward != ''">ward = #{ward},</if>
+            <if test="testDate != null ">test_date = #{testDate},</if>
+            <if test="job != null  and job != ''">job = #{job},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="nation != null  and nation != ''">nation = #{nation},</if>
+            <if test="maritalStatus != null  and maritalStatus != ''">marital_status = #{maritalStatus},</if>
+            <if test="birthday != null ">birthday = #{birthday},</if>
+            <if test="contanctInformation != null  and contanctInformation != ''">contanct_information = #{contanctInformation},</if>
+            <if test="source != null  and source != ''">source = #{source},</if>
+            <if test="classificationCoding != null  and classificationCoding != ''">classification_coding = #{classificationCoding},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="diagnosis != null  and diagnosis != ''"> diagnosis = #{diagnosis}</if>
+        </trim>
+        where patient_id = #{patientId}
+    </update>
+
+    <delete id="deletePatientUserById" parameterType="Long">
+        delete from patient_user where patient_id = #{patientId}
+    </delete>
+
+    <delete id="deletePatientUserByIds" parameterType="String">
+        delete from patient_user where patient_id in 
+        <foreach item="patientId" collection="array" open="(" separator="," close=")">
+            #{patientId}
+        </foreach>
+    </delete>
+    <select id="selectAllByCreateTime"  resultMap="PatientUserResult">
+        <include refid="selectPatientUserVo"/>
+        <where>
+            <if test="startTime !=null and startTime !='' ">
+                <![CDATA[ and create_time  >=  #{startTime}  ]]>
+            </if>
+            <if test="endTime !=null and endTime!='' "  >
+                <![CDATA[ and create_time <=  #{endTime}  ]]>
+            </if>
+            <if test="createBy !=null and createBy!=''">
+                and create_by=#{createBy}
+            </if>
+        </where>
+    </select>
+</mapper>

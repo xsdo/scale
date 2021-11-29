@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.StatisticsTable1Mapper">
+    
+    <resultMap type="StatisticsTable1" id="StatisticsTable1Result">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="registeredCount"    column="registered_count"    />
+        <result property="completeCount"    column="complete_count"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectStatisticsTable1Vo">
+        select id, year, registered_count, complete_count,status, del_flag, create_by, create_time from statistics_table1
+    </sql>
+
+    <select id="selectStatisticsTable1List" parameterType="StatisticsTable1" resultMap="StatisticsTable1Result">
+        <include refid="selectStatisticsTable1Vo"/>
+        <where>  
+            <if test="year != null "> and year = #{year}</if>
+            <if test="registeredCount != null "> and registered_count = #{registeredCount}</if>
+            <if test="completeCount != null "> and complete_count = #{completeCount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectStatisticsTable1ById" parameterType="Long" resultMap="StatisticsTable1Result">
+        <include refid="selectStatisticsTable1Vo"/>
+        where id = #{id}
+    </select>
+    <select id="selectStatisticsTable1ByYear"  resultMap="StatisticsTable1Result">
+        <include refid="selectStatisticsTable1Vo"/>
+        where year = #{year}
+    </select>
+    <insert id="insertStatisticsTable1" parameterType="StatisticsTable1" useGeneratedKeys="true" keyProperty="id">
+        insert into statistics_table1
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null ">year,</if>
+            <if test="registeredCount != null ">registered_count,</if>
+            <if test="completeCount != null ">complete_count,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null ">#{year},</if>
+            <if test="registeredCount != null ">#{registeredCount},</if>
+            <if test="completeCount != null ">#{completeCount},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStatisticsTable1" parameterType="StatisticsTable1">
+        update statistics_table1
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null ">year = #{year},</if>
+            <if test="registeredCount != null ">registered_count = #{registeredCount},</if>
+            <if test="completeCount != null ">complete_count = #{completeCount},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStatisticsTable1ById" parameterType="Long">
+        delete from statistics_table1 where id = #{id}
+    </delete>
+
+    <delete id="deleteStatisticsTable1ByIds" parameterType="String">
+        delete from statistics_table1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

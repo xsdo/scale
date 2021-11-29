@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzMettScoreMapper">
+    
+    <resultMap type="ZzMettScore" id="ZzMettScoreResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="point"    column="point"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="reactionTime"    column="reaction_time"    />
+        <result property="exId"    column="ex_id"    />
+    </resultMap>
+
+    <sql id="selectZzMettScoreVo">
+        select id, title, point, test_date, task_id, patient_id, scale_id, workstation,reaction_time,ex_id from zz_mett_score
+    </sql>
+
+    <select id="selectZzMettScoreList" parameterType="ZzMettScore" resultMap="ZzMettScoreResult">
+        <include refid="selectZzMettScoreVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="point != null  and point != ''"> and point = #{point}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="exId != null  and exId != ''"> and exId = #{exId}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectZzMettScoreById" parameterType="Long" resultMap="ZzMettScoreResult">
+        <include refid="selectZzMettScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzMettScore" parameterType="ZzMettScore" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_mett_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="point != null  and point != ''">point,</if>
+            <if test="testDate != null ">test_date,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="reactionTime != null  and reactionTime != ''">reaction_time,</if>
+            <if test="exId != null  and exId != ''">ex_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="point != null  and point != ''">#{point},</if>
+            <if test="testDate != null ">#{testDate},</if>
+            <if test="taskId != null ">#{taskId},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="reactionTime != null  and reactionTime != ''">#{reactionTime},</if>
+            <if test="exId != null  and exId != ''">#{exId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzMettScore" parameterType="ZzMettScore">
+        update zz_mett_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="point != null  and point != ''">point = #{point},</if>
+            <if test="testDate != null ">test_date = #{testDate},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="reactionTime != null  and reactionTime != ''">reaction_time = #{reactionTime},</if>
+            <if test="exId != null  and exId != ''">ex_id = #{exId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzMettScoreById" parameterType="Long">
+        delete from zz_mett_score where id = #{id}
+    </delete>
+
+    <delete id="deleteZzMettScoreByIds" parameterType="String">
+        delete from zz_mett_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectListByTaskId" parameterType="Long" resultMap="ZzMettScoreResult">
+        <include refid="selectZzMettScoreVo"/>
+        where task_id=#{taskId}
+    </select>
+</mapper>

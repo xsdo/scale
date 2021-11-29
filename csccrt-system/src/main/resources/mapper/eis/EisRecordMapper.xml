@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.eis.mapper.EisRecordMapper">
+    
+    <resultMap type="EisRecord" id="EisRecordResult">
+        <result property="tableId"    column="table_id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="tableName"    column="tabl_name"    />
+        <result property="grade"    column="grade"    />
+        <result property="telNumber"    column="tel_number"    />
+        <result property="score"    column="score"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="tableComment"    column="table_comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time   "    />
+        <result property="remark"    column="remark"    />
+        <result property="scoreA"    column="scoreA"    />
+        <result property="scoreB"    column="scoreB"    />
+        <result property="scoreC"    column="scoreC"    />
+        <result property="scoreD"    column="scoreD"    />
+        <result property="scoreE"    column="scoreE"    />
+        <result property="scoreF"    column="scoreF"    />
+        <result property="scoreG"    column="scoreG"    />
+    </resultMap>
+
+    <sql id="selectEisRecordVo">
+        select table_id,scale_id,tabl_name,grade,tel_number,score,task_status,del_flag,table_comment,create_time,update_time,remark,scoreA,scoreB,scoreC,scoreD,scoreE,scoreF,scoreG
+         from eis_record
+    </sql>
+
+    <select id="selectEisRecordList" parameterType="EisRecord" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        <where>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="tableName != null "> and tabl_name = #{tableName}</if>
+            <if test="grade != null "> and grade = #{grade}</if>
+            <if test="telNumber != null "> and tel_number = #{telNumber}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="taskStatus != null "> and task_status = #{taskStatus}</if>
+            <if test="delFlag != null "> and del_flag = #{delFlag}</if>
+            <if test="tableComment != null  and tableComment != ''"> and table_comment = #{tableComment}</if>
+        </where>
+    </select>
+
+    <select id="selectEisRecordByScaleId" parameterType="Long" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        where scale_id = #{scaleId}
+    </select>
+
+    <select id="selectEisRecordById" parameterType="Long" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        where table_id = #{tableId}
+    </select>
+    <select id="selectEisRecords" parameterType="Long" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        where del_flag = #{delFlag}
+    </select>
+    <select id="selectEisRecordByTel" parameterType="String" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        where tel_number = #{telNumber}
+    </select>
+    <select id="selectEisRecordByStatus" parameterType="Long" resultMap="EisRecordResult">
+        <include refid="selectEisRecordVo"/>
+        where task_status = #{taskStatus}
+    </select>
+
+    <insert id="insertEisRecord" parameterType="EisRecord">
+        insert into eis_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tableId != null ">table_id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="tableName != null ">tabl_name,</if>
+            <if test="grade != null ">grade,</if>
+            <if test="telNumber != null ">tel_number,</if>
+            <if test="score != null ">score,</if>
+            <if test="taskStatus != null ">task_status,</if>
+            <if test="delFlag != null ">del_flag,</if>
+            <if test="tableComment != null  and tableComment != ''">table_comment,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="scoreA != null ">scoreA,</if>
+            <if test="scoreB != null ">scoreB,</if>
+            <if test="scoreC != null ">scoreC,</if>
+            <if test="scoreD != null ">scoreD,</if>
+            <if test="scoreE != null ">scoreE,</if>
+            <if test="scoreF != null ">scoreF,</if>
+            <if test="scoreG != null ">scoreG,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tableId != null ">#{tableId},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="tableName != null ">#{tableName},</if>
+            <if test="grade != null ">#{grade},</if>
+            <if test="telNumber != null ">#{telNumber},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="taskStatus != null ">#{taskStatus},</if>
+            <if test="delFlag != null ">#{delFlag},</if>
+            <if test="tableComment != null  and tableComment != ''">#{tableComment},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="scoreA != null ">#{scoreA},</if>
+            <if test="scoreB != null ">#{scoreB},</if>
+            <if test="scoreC != null ">#{scoreC},</if>
+            <if test="scoreD != null ">#{scoreD},</if>
+            <if test="scoreE != null ">#{scoreE},</if>
+            <if test="scoreF != null ">#{scoreF},</if>
+            <if test="scoreG != null ">#{scoreG},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEisRecord" parameterType="EisRecord">
+        update eis_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="tableName != null ">tabl_name = #{tableName},</if>
+            <if test="grade != null ">grade = #{grade},</if>
+            <if test="telNumber != null ">tel_number = #{telNumber},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="taskStatus != null ">task_status = #{taskStatus},</if>
+            <if test="delFlag != null ">del_flag = #{delFlag},</if>
+            <if test="tableComment != null ">table_comment = #{tableComment},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="scoreA != null ">scoreA = #{scoreA},</if>
+            <if test="scoreB != null ">scoreB = #{scoreB},</if>
+            <if test="scoreC != null ">scoreC = #{scoreC},</if>
+            <if test="scoreD != null ">scoreD = #{scoreD},</if>
+            <if test="scoreE != null ">scoreE = #{scoreE},</if>
+            <if test="scoreF != null ">scoreF = #{scoreF},</if>
+            <if test="scoreG != null ">scoreG = #{scoreG},</if>
+        </trim>
+        where table_id = #{tableId}
+    </update>
+
+    <delete id="deleteEisRecordById" parameterType="Long">
+        delete from eis_record where table_id = #{tableId}
+    </delete>
+
+    <delete id="deleteEisRecordByIds" parameterType="String">
+        delete from eis_record where table_id in
+        <foreach item="tableId" collection="array" open="(" separator="," close=")">
+            #{tableId}
+        </foreach>
+    </delete>
+    
+</mapper>

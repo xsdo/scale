@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzGjTypeMapper">
+    
+    <resultMap type="ZzGjType" id="ZzGjTypeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="optionA"    column="option_a"    />
+        <result property="optionB"    column="option_b"    />
+        <result property="optionC"    column="option_c"    />
+        <result property="optionD"    column="option_d"    />
+        <result property="optionCorrect"    column="option_correct"    />
+        <result property="parentId"    column="parent_id"    />
+    </resultMap>
+
+    <sql id="selectZzGjTypeVo">
+        select id, title, content, option_a, option_b, option_c, option_d, option_correct, parent_id from zz_gj_type
+    </sql>
+
+    <select id="selectZzGjTypeList" parameterType="ZzGjType" resultMap="ZzGjTypeResult">
+        <include refid="selectZzGjTypeVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="optionA != null  and optionA != ''"> and option_a = #{optionA}</if>
+            <if test="optionB != null  and optionB != ''"> and option_b = #{optionB}</if>
+            <if test="optionC != null  and optionC != ''"> and option_c = #{optionC}</if>
+            <if test="optionD != null  and optionD != ''"> and option_d = #{optionD}</if>
+            <if test="optionCorrect != null  and optionCorrect != ''"> and option_correct = #{optionCorrect}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectZzGjTypeById" parameterType="Long" resultMap="ZzGjTypeResult">
+        <include refid="selectZzGjTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzGjType" parameterType="ZzGjType" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_gj_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="optionA != null  and optionA != ''">option_a,</if>
+            <if test="optionB != null  and optionB != ''">option_b,</if>
+            <if test="optionC != null  and optionC != ''">option_c,</if>
+            <if test="optionD != null  and optionD != ''">option_d,</if>
+            <if test="optionCorrect != null  and optionCorrect != ''">option_correct,</if>
+            <if test="parentId != null ">parent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="optionA != null  and optionA != ''">#{optionA},</if>
+            <if test="optionB != null  and optionB != ''">#{optionB},</if>
+            <if test="optionC != null  and optionC != ''">#{optionC},</if>
+            <if test="optionD != null  and optionD != ''">#{optionD},</if>
+            <if test="optionCorrect != null  and optionCorrect != ''">#{optionCorrect},</if>
+            <if test="parentId != null ">#{parentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzGjType" parameterType="ZzGjType">
+        update zz_gj_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="optionA != null  and optionA != ''">option_a = #{optionA},</if>
+            <if test="optionB != null  and optionB != ''">option_b = #{optionB},</if>
+            <if test="optionC != null  and optionC != ''">option_c = #{optionC},</if>
+            <if test="optionD != null  and optionD != ''">option_d = #{optionD},</if>
+            <if test="optionCorrect != null  and optionCorrect != ''">option_correct = #{optionCorrect},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzGjTypeById" parameterType="Long">
+        delete from zz_gj_type where id = #{id}
+    </delete>
+
+    <delete id="deleteZzGjTypeByIds" parameterType="String">
+        delete from zz_gj_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

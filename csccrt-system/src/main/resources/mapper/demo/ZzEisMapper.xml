@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzEisMapper">
+    
+    <resultMap type="ZzEis" id="ZzEisResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="point"    column="point"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="workstation"    column="workstation"    />
+    </resultMap>
+
+    <sql id="selectZzEisVo">
+        select id, title, point, test_date, task_id, patient_id, scale_id, workstation from zz_eis
+    </sql>
+
+    <select id="selectZzEisList" parameterType="ZzEis" resultMap="ZzEisResult">
+        <include refid="selectZzEisVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="point != null  and point != ''"> and point = #{point}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+        </where>
+    </select>
+    
+    <select id="selectZzEisById" parameterType="Long" resultMap="ZzEisResult">
+        <include refid="selectZzEisVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzEis" parameterType="ZzEis" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_eis
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="point != null  and point != ''">point,</if>
+            <if test="testDate != null ">test_date,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="point != null  and point != ''">#{point},</if>
+            <if test="testDate != null ">#{testDate},</if>
+            <if test="taskId != null ">#{taskId},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzEis" parameterType="ZzEis">
+        update zz_eis
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="point != null  and point != ''">point = #{point},</if>
+            <if test="testDate != null ">test_date = #{testDate},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzEisById" parameterType="Long">
+        delete from zz_eis where id = #{id}
+    </delete>
+
+    <delete id="deleteZzEisByIds" parameterType="String">
+        delete from zz_eis where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectListByTaskId" parameterType="Long" resultMap="ZzEisResult">
+        <include refid="selectZzEisVo"/>
+        where task_id=#{taskId}
+    </select>
+</mapper>

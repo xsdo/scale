@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.peri.mapper.PeriTaskMapper">
+    
+    <resultMap type="PeriTask" id="PeriTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="testCoding"    column="test_coding"    />
+        <result property="typeids"    column="typeIds"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="typeFlag"    column="type_flag"    />
+    </resultMap>
+
+    <sql id="selectPeriTaskVo">
+        select task_id, user_id, user_name, patient_id, patient_name, workstation, test_coding, typeIds, task_status, del_flag, create_by, create_time, update_by, update_time, scale_id, type_flag from peri_task
+    </sql>
+
+    <sql id="selectPeriTaskVos">
+        select a.task_id, a.user_id, a.user_name, a.patient_id, a.patient_name, a.workstation, a.test_coding, a.typeIds, a.task_status,
+        a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.scale_id, a.type_flag,
+    </sql>
+
+    <select id="selectPeriTaskList" parameterType="PeriTask" resultMap="PeriTaskResult">
+        <include refid="selectPeriTaskVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and test_coding = #{testCoding}</if>
+            <if test="typeids != null  and typeids != ''"> and typeIds = #{typeids}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+            <if test="scaleId != null  and scaleId != ''"> and scale_id = #{scaleId}</if>
+            <if test="typeFlag != null  and typeFlag != ''"> and type_flag = #{typeFlag}</if>
+            <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectPeriTaskById" parameterType="Long" resultMap="PeriTaskResult">
+        <include refid="selectPeriTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertPeriTask" parameterType="PeriTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into peri_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding,</if>
+            <if test="typeids != null  and typeids != ''">typeIds,</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="scaleId != null  and scaleId != ''">scale_id,</if>
+            <if test="typeFlag != null  and typeFlag != ''">type_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">#{testCoding},</if>
+            <if test="typeids != null  and typeids != ''">#{typeids},</if>
+            <if test="taskStatus != null  and taskStatus != ''">#{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="scaleId != null  and scaleId != ''">#{scaleId},</if>
+            <if test="typeFlag != null  and typeFlag != ''">#{typeFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePeriTask" parameterType="PeriTask">
+        update peri_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding = #{testCoding},</if>
+            <if test="typeids != null  and typeids != ''">typeIds = #{typeids},</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status = #{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="scaleId != null  and scaleId != ''">scale_id = #{scaleId},</if>
+            <if test="typeFlag != null  and typeFlag != ''">type_flag = #{typeFlag},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deletePeriTaskById" parameterType="Long">
+        delete from peri_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deletePeriTaskByIds" parameterType="String">
+        delete from peri_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+
+    <update id="updateByPatientId" parameterType="PeriTask">
+        update peri_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding = #{testCoding},</if>
+            <if test="typeids != null  and typeids != ''">typeIds = #{typeids},</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status = #{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="scaleId != null  and scaleId != ''">scale_id = #{scaleId},</if>
+            <if test="typeFlag != null  and typeFlag != ''">type_flag = #{typeFlag},</if>
+        </trim>
+        where patient_id = #{patientId} and del_flag = #{delFlag}
+    </update>
+
+    <select id="selectPeriTaskByworkstation" parameterType="String" resultMap="PeriTaskResult">
+        <include refid="selectPeriTaskVos"/>
+        b.type_name as day
+        from peri_task a
+        left join evaluation_type b
+        on a.typeIds = b.type_id
+        where a.task_status!='3' and a.workstation = #{workstation}
+    </select>
+</mapper>

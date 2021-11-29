@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.FzyqLogMapper">
+    
+    <resultMap type="FzyqLog" id="FzyqLogResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="education"    column="education"    />
+        <result property="job"    column="job"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="testDay"    column="test_day"    />
+        <result property="correct"    column="correct"    />
+        <result property="average"    column="average"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectFzyqLogVo">
+        select id, patient_id, patient_name, sex, age, education, job, diagnosis, test_day, correct, average, create_by, create_time from fzyq_log
+    </sql>
+
+    <select id="selectFzyqLogList" parameterType="FzyqLog" resultMap="FzyqLogResult">
+        <include refid="selectFzyqLogVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectFzyqLogById" parameterType="Long" resultMap="FzyqLogResult">
+        <include refid="selectFzyqLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFzyqLog" parameterType="FzyqLog" useGeneratedKeys="true" keyProperty="id">
+        insert into fzyq_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="job != null  and job != ''">job,</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis,</if>
+            <if test="testDay != null ">test_day,</if>
+            <if test="correct != null ">correct,</if>
+            <if test="average != null ">average,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="job != null  and job != ''">#{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">#{diagnosis},</if>
+            <if test="testDay != null ">#{testDay},</if>
+            <if test="correct != null ">#{correct},</if>
+            <if test="average != null ">#{average},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFzyqLog" parameterType="FzyqLog">
+        update fzyq_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="job != null  and job != ''">job = #{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis = #{diagnosis},</if>
+            <if test="testDay != null ">test_day = #{testDay},</if>
+            <if test="correct != null ">correct = #{correct},</if>
+            <if test="average != null ">average = #{average},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFzyqLogById" parameterType="Long">
+        delete from fzyq_log where id = #{id}
+    </delete>
+
+    <delete id="deleteFzyqLogByIds" parameterType="String">
+        delete from fzyq_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

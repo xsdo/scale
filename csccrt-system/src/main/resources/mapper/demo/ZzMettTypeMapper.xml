@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzMettTypeMapper">
+    
+    <resultMap type="ZzMettType" id="ZzMettTypeResult">
+        <result property="id"    column="id"    />
+        <result property="exId"    column="ex_id"    />
+        <result property="exPartUrl"    column="ex_part_url"    />
+        <result property="exAllUrl"    column="ex_all_url"    />
+        <result property="exPartRemark"    column="ex_part_remark"    />
+        <result property="exAllRemark"    column="ex_all_remark"    />
+    </resultMap>
+
+    <sql id="selectZzMettTypeVo">
+        select id, ex_id, ex_part_url, ex_all_url,ex_part_remark,ex_all_remark from zz_mett_type
+    </sql>
+
+    <select id="selectZzMettTypeList" parameterType="ZzMettType" resultMap="ZzMettTypeResult">
+        <include refid="selectZzMettTypeVo"/>
+        <where>  
+            <if test="exId != null  and exId != ''"> and ex_id = #{exId}</if>
+            <if test="exPartUrl != null  and exPartUrl != ''"> and ex_part_url = #{exPartUrl}</if>
+            <if test="exAllUrl != null  and exAllUrl != ''"> and ex_all_url = #{exAllUrl}</if>
+        </where>
+    </select>
+    
+    <select id="selectZzMettTypeById" parameterType="Long" resultMap="ZzMettTypeResult">
+        <include refid="selectZzMettTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzMettType" parameterType="ZzMettType" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_mett_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="exId != null  and exId != ''">ex_id,</if>
+            <if test="exPartUrl != null  and exPartUrl != ''">ex_part_url,</if>
+            <if test="exAllUrl != null  and exAllUrl != ''">ex_all_url,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="exId != null  and exId != ''">#{exId},</if>
+            <if test="exPartUrl != null  and exPartUrl != ''">#{exPartUrl},</if>
+            <if test="exAllUrl != null  and exAllUrl != ''">#{exAllUrl},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzMettType" parameterType="ZzMettType">
+        update zz_mett_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="exId != null  and exId != ''">ex_id = #{exId},</if>
+            <if test="exPartUrl != null  and exPartUrl != ''">ex_part_url = #{exPartUrl},</if>
+            <if test="exAllUrl != null  and exAllUrl != ''">ex_all_url = #{exAllUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzMettTypeById" parameterType="Long">
+        delete from zz_mett_type where id = #{id}
+    </delete>
+
+    <delete id="deleteZzMettTypeByIds" parameterType="String">
+        delete from zz_mett_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

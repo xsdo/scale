@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.MettLogMapper">
+    
+    <resultMap type="MettLog" id="MettLogResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="education"    column="education"    />
+        <result property="job"    column="job"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="testDay"    column="test_day"    />
+        <result property="gxCorrect"    column="gx_correct"    />
+        <result property="bsCorrect"    column="bs_correct"    />
+        <result property="fnCorrect"    column="fn_correct"    />
+        <result property="ywCorrect"    column="yw_correct"    />
+        <result property="jyCorrect"    column="jy_correct"    />
+        <result property="kjCorrect"    column="kj_correct"    />
+        <result property="zxCorrect"    column="zx_correct"    />
+        <result property="gxReply"    column="gx_reply"    />
+        <result property="bsReply"    column="bs_reply"    />
+        <result property="fnReply"    column="fn_reply"    />
+        <result property="ywReply"    column="yw_reply"    />
+        <result property="jyReply"    column="jy_reply"    />
+        <result property="kjReply"    column="kj_reply"    />
+        <result property="zxReply"    column="zx_reply"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectMettLogVo">
+        select id, patient_id, patient_name, sex, age, education, job, diagnosis, test_day, gx_correct, bs_correct, fn_correct, yw_correct, jy_correct, kj_correct, zx_correct, gx_reply, bs_reply, fn_reply, yw_reply, jy_reply, kj_reply, zx_reply, create_by, create_time from mett_log
+    </sql>
+
+    <select id="selectMettLogList" parameterType="MettLog" resultMap="MettLogResult">
+        <include refid="selectMettLogVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMettLogById" parameterType="Long" resultMap="MettLogResult">
+        <include refid="selectMettLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMettLog" parameterType="MettLog" useGeneratedKeys="true" keyProperty="id">
+        insert into mett_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="job != null  and job != ''">job,</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis,</if>
+            <if test="testDay != null ">test_day,</if>
+            <if test="gxCorrect != null ">gx_correct,</if>
+            <if test="bsCorrect != null ">bs_correct,</if>
+            <if test="fnCorrect != null ">fn_correct,</if>
+            <if test="ywCorrect != null ">yw_correct,</if>
+            <if test="jyCorrect != null ">jy_correct,</if>
+            <if test="kjCorrect != null ">kj_correct,</if>
+            <if test="zxCorrect != null ">zx_correct,</if>
+            <if test="gxReply != null ">gx_reply,</if>
+            <if test="bsReply != null ">bs_reply,</if>
+            <if test="fnReply != null ">fn_reply,</if>
+            <if test="ywReply != null ">yw_reply,</if>
+            <if test="jyReply != null ">jy_reply,</if>
+            <if test="kjReply != null ">kj_reply,</if>
+            <if test="zxReply != null ">zx_reply,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="job != null  and job != ''">#{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">#{diagnosis},</if>
+            <if test="testDay != null ">#{testDay},</if>
+            <if test="gxCorrect != null ">#{gxCorrect},</if>
+            <if test="bsCorrect != null ">#{bsCorrect},</if>
+            <if test="fnCorrect != null ">#{fnCorrect},</if>
+            <if test="ywCorrect != null ">#{ywCorrect},</if>
+            <if test="jyCorrect != null ">#{jyCorrect},</if>
+            <if test="kjCorrect != null ">#{kjCorrect},</if>
+            <if test="zxCorrect != null ">#{zxCorrect},</if>
+            <if test="gxReply != null ">#{gxReply},</if>
+            <if test="bsReply != null ">#{bsReply},</if>
+            <if test="fnReply != null ">#{fnReply},</if>
+            <if test="ywReply != null ">#{ywReply},</if>
+            <if test="jyReply != null ">#{jyReply},</if>
+            <if test="kjReply != null ">#{kjReply},</if>
+            <if test="zxReply != null ">#{zxReply},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMettLog" parameterType="MettLog">
+        update mett_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="job != null  and job != ''">job = #{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis = #{diagnosis},</if>
+            <if test="testDay != null ">test_day = #{testDay},</if>
+            <if test="gxCorrect != null ">gx_correct = #{gxCorrect},</if>
+            <if test="bsCorrect != null ">bs_correct = #{bsCorrect},</if>
+            <if test="fnCorrect != null ">fn_correct = #{fnCorrect},</if>
+            <if test="ywCorrect != null ">yw_correct = #{ywCorrect},</if>
+            <if test="jyCorrect != null ">jy_correct = #{jyCorrect},</if>
+            <if test="kjCorrect != null ">kj_correct = #{kjCorrect},</if>
+            <if test="zxCorrect != null ">zx_correct = #{zxCorrect},</if>
+            <if test="gxReply != null ">gx_reply = #{gxReply},</if>
+            <if test="bsReply != null ">bs_reply = #{bsReply},</if>
+            <if test="fnReply != null ">fn_reply = #{fnReply},</if>
+            <if test="ywReply != null ">yw_reply = #{ywReply},</if>
+            <if test="jyReply != null ">jy_reply = #{jyReply},</if>
+            <if test="kjReply != null ">kj_reply = #{kjReply},</if>
+            <if test="zxReply != null ">zx_reply = #{zxReply},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMettLogById" parameterType="Long">
+        delete from mett_log where id = #{id}
+    </delete>
+
+    <delete id="deleteMettLogByIds" parameterType="String">
+        delete from mett_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

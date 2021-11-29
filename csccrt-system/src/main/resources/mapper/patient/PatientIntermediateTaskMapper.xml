@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.PatientIntermediateTaskMapper">
+
+    <resultMap type="PatientIntermediateTask" id="PatientIntermediateTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="testCoding"    column="test_coding"    />
+        <result property="typeIds"    column="typeIds"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="scaleId"    column="scale_id"    />
+    </resultMap>
+
+    <sql id="selectPatientIntermediateTaskVo">
+        select task_id, user_id, user_name, patient_id, patient_name, workstation, test_coding, typeIds, task_status, del_flag, create_by, create_time, update_by, update_time,scale_id from patient_intermediate_task
+    </sql>
+
+    <select id="selectPatientIntermediateTaskList" parameterType="PatientIntermediateTask" resultMap="PatientIntermediateTaskResult">
+        <include refid="selectPatientIntermediateTaskVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testCoding != null  and testCoding != ''"> and test_coding = #{testCoding}</if>
+            <if test="typeIds != null  and typeIds != ''"> and typeIds = #{typeIds}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPatientIntermediateTaskById" parameterType="Long" resultMap="PatientIntermediateTaskResult">
+        <include refid="selectPatientIntermediateTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+    <select id="selectPatientTaskByPatientId"  resultMap="PatientIntermediateTaskResult">
+        <include refid="selectPatientIntermediateTaskVo"/>
+        where patient_id = #{patientId} AND del_flag=#{delFlag}
+    </select>
+    <select id="selectAllByPatientId" parameterType="Long" resultMap="PatientIntermediateTaskResult">
+        <include refid="selectPatientIntermediateTaskVo"/>
+        where patient_id = #{patientId}
+    </select>
+    <insert id="insertPatientIntermediateTask" parameterType="PatientIntermediateTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into patient_intermediate_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding,</if>
+            <if test="typeIds != null  and typeIds != ''">typeIds,</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="scaleId != null ">scale_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">#{testCoding},</if>
+            <if test="typeIds != null  and typeIds != ''">#{typeIds},</if>
+            <if test="taskStatus != null  and taskStatus != ''">#{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePatientIntermediateTask" parameterType="PatientIntermediateTask">
+        update patient_intermediate_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding = #{testCoding},</if>
+            <if test="typeIds != null  and typeIds != ''">typeIds = #{typeIds},</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status = #{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+    <update id="updateByPatientId" parameterType="PatientIntermediateTask">
+        update patient_intermediate_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testCoding != null  and testCoding != ''">test_coding = #{testCoding},</if>
+            <if test="typeIds != null  and typeIds != ''">typeIds = #{typeIds},</if>
+            <if test="taskStatus != null  and taskStatus != ''">task_status = #{taskStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+        </trim>
+        where patient_id = #{patientId} AND del_flag = #{delFlag}
+    </update>
+    <delete id="deletePatientIntermediateTaskById" parameterType="Long">
+        delete from patient_intermediate_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deletePatientIntermediateTaskByIds" parameterType="String">
+        delete from patient_intermediate_task where task_id in
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+    <select id="selectTaskByWorkStation" parameterType="String" resultMap="PatientIntermediateTaskResult">
+        <include refid="selectPatientIntermediateTaskVo"/>
+        where workstation = #{workStation} and task_status!=3
+    </select>
+</mapper>

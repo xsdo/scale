@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.scale.mapper.ScaleMenuMapper">
+    
+    <resultMap type="ScaleMenu" id="ScaleMenuResult">
+        <result property="id"    column="id"    />
+        <result property="scaleName"    column="scale_name"    />
+        <result property="grade"    column="grade"    />
+        <result property="pid"    column="pid"    />
+        <result property="applyScope"    column="apply_scope"    />
+        <result property="commonly"    column="commonly"    />
+        <result property="instruction"    column="instruction"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectScaleMenuVo">
+        select id, scale_name, grade, pid, apply_scope, commonly, instruction, del_flag, create_time, update_time, remark from scale_menu
+    </sql>
+
+    <select id="selectScaleMenuList" parameterType="ScaleMenu" resultMap="ScaleMenuResult">
+        <include refid="selectScaleMenuVo"/>
+        <where>  
+            <if test="scaleName != null  and scaleName != ''"> and scale_name like concat('%', #{scaleName}, '%')</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="applyScope != null  and applyScope != ''"> and apply_scope = #{applyScope}</if>
+            <if test="commonly != null  and commonly != ''"> and commonly = #{commonly}</if>
+            <if test="instruction != null  and instruction != ''"> and instruction = #{instruction}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleMenuById" parameterType="Long" resultMap="ScaleMenuResult">
+        <include refid="selectScaleMenuVo"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="insertScaleMenu" parameterType="ScaleMenu" useGeneratedKeys="true" keyProperty="id">
+        insert into scale_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scaleName != null  and scaleName != ''">scale_name,</if>
+            <if test="grade != null  and grade != ''">grade,</if>
+            <if test="pid != null ">pid,</if>
+            <if test="applyScope != null  and applyScope != ''">apply_scope,</if>
+            <if test="commonly != null  and commonly != ''">commonly,</if>
+            <if test="instruction != null  and instruction != ''">instruction,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scaleName != null  and scaleName != ''">#{scaleName},</if>
+            <if test="grade != null  and grade != ''">#{grade},</if>
+            <if test="pid != null ">#{pid},</if>
+            <if test="applyScope != null  and applyScope != ''">#{applyScope},</if>
+            <if test="commonly != null  and commonly != ''">#{commonly},</if>
+            <if test="instruction != null  and instruction != ''">#{instruction},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleMenu" parameterType="ScaleMenu">
+        update scale_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleName != null  and scaleName != ''">scale_name = #{scaleName},</if>
+            <if test="grade != null  and grade != ''">grade = #{grade},</if>
+            <if test="pid != null ">pid = #{pid},</if>
+            <if test="applyScope != null  and applyScope != ''">apply_scope = #{applyScope},</if>
+            <if test="commonly != null  and commonly != ''">commonly = #{commonly},</if>
+            <if test="instruction != null  and instruction != ''">instruction = #{instruction},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScaleMenuById" parameterType="Long">
+        delete from scale_menu where id = #{id}
+    </delete>
+
+    <delete id="deleteScaleMenuByIds" parameterType="String">
+        delete from scale_menu where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="hasChildById" resultType="Integer">
+        select count(1) from scale_menu where pid = #{id}
+    </select>
+</mapper>

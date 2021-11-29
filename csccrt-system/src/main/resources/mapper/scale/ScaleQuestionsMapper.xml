@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.scale.mapper.ScaleQuestionsMapper">
+    
+    <resultMap type="ScaleQuestions" id="ScaleQuestionsResult">
+        <result property="id"    column="id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="options"    column="options"    />
+        <result property="answers"    column="answers"    />
+        <result property="resolution"    column="resolution"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectScaleQuestionsVo">
+        select id, scale_id, title, content, options, answers, resolution, remarks from scale_questions
+    </sql>
+
+    <select id="selectScaleQuestionsList" parameterType="ScaleQuestions" resultMap="ScaleQuestionsResult">
+        <include refid="selectScaleQuestionsVo"/>
+        <where>  
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="options != null  and options != ''"> and options = #{options}</if>
+            <if test="answers != null  and answers != ''"> and answers = #{answers}</if>
+            <if test="resolution != null  and resolution != ''"> and resolution = #{resolution}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleQuestionsById" parameterType="Long" resultMap="ScaleQuestionsResult">
+        <include refid="selectScaleQuestionsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertScaleQuestions" parameterType="ScaleQuestions" useGeneratedKeys="true" keyProperty="id">
+        insert into scale_questions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="options != null  and options != ''">options,</if>
+            <if test="answers != null  and answers != ''">answers,</if>
+            <if test="resolution != null  and resolution != ''">resolution,</if>
+            <if test="remarks != null  and remarks != ''">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="options != null  and options != ''">#{options},</if>
+            <if test="answers != null  and answers != ''">#{answers},</if>
+            <if test="resolution != null  and resolution != ''">#{resolution},</if>
+            <if test="remarks != null  and remarks != ''">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleQuestions" parameterType="ScaleQuestions">
+        update scale_questions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="options != null  and options != ''">options = #{options},</if>
+            <if test="answers != null  and answers != ''">answers = #{answers},</if>
+            <if test="resolution != null  and resolution != ''">resolution = #{resolution},</if>
+            <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScaleQuestionsById" parameterType="Long">
+        delete from scale_questions where id = #{id}
+    </delete>
+
+    <delete id="deleteScaleQuestionsByIds" parameterType="String">
+        delete from scale_questions where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

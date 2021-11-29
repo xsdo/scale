@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.ipa.mapper.IpaTaskScoreMapper">
+    
+    <resultMap type="IpaTaskScore" id="IpaTaskScoreResult">
+        <result property="id"    column="id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="score"    column="score"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="typeIds"    column="type_ids"    />
+    </resultMap>
+
+    <sql id="selectIpaTaskScoreVo">
+        select id, scale_id, task_id, patient_id, score, workstation, test_date, type_ids from ipa_task_score
+    </sql>
+
+    <select id="selectIpaTaskScoreList" parameterType="IpaTaskScore" resultMap="IpaTaskScoreResult">
+        <include refid="selectIpaTaskScoreVo"/>
+        <where>  
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+            <if test="typeIds != null  and typeIds != ''"> and type_ids = #{typeIds}</if>
+        </where>
+    </select>
+    
+    <select id="selectIpaTaskScoreById" parameterType="Long" resultMap="IpaTaskScoreResult">
+        <include refid="selectIpaTaskScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertIpaTaskScore" parameterType="IpaTaskScore">
+        insert into ipa_task_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="score != null ">score,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="testDate != null ">test_date,</if>
+            <if test="typeIds != null  and typeIds != ''">type_ids,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="taskId != null ">#{taskId},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="testDate != null ">#{testDate},</if>
+            <if test="typeIds != null  and typeIds != ''">#{typeIds},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIpaTaskScore" parameterType="IpaTaskScore">
+        update ipa_task_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testDate != null ">test_date = #{testDate},</if>
+            <if test="typeIds != null  and typeIds != ''">type_ids = #{typeIds},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIpaTaskScoreById" parameterType="Long">
+        delete from ipa_task_score where id = #{id}
+    </delete>
+
+    <delete id="deleteIpaTaskScoreByIds" parameterType="String">
+        delete from ipa_task_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.scale.mapper.ScaleScoreMapper">
+    
+    <resultMap type="ScaleScore" id="ScaleScoreResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="title"    column="title"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectScaleScoreVo">
+        select id, task_id, scale_id, title, score from scale_score
+    </sql>
+
+    <select id="selectScaleScoreList" parameterType="ScaleScore" resultMap="ScaleScoreResult">
+        <include refid="selectScaleScoreVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleScoreById" parameterType="Long" resultMap="ScaleScoreResult">
+        <include refid="selectScaleScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertScaleScore" parameterType="ScaleScore" useGeneratedKeys="true" keyProperty="id">
+        insert into scale_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null ">task_id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="score != null ">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null ">#{taskId},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="score != null ">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleScore" parameterType="ScaleScore">
+        update scale_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="score != null ">score = #{score},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScaleScoreById" parameterType="Long">
+        delete from scale_score where id = #{id}
+    </delete>
+
+    <delete id="deleteScaleScoreByIds" parameterType="String">
+        delete from scale_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

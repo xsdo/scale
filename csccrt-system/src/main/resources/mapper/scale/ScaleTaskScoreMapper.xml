@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.scale.mapper.ScaleTaskScoreMapper">
+    
+    <resultMap type="ScaleTaskScore" id="ScaleTaskScoreResult">
+        <result property="id"    column="id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="score"    column="score"    />
+        <result property="workstation"    column="workstation"    />
+        <result property="testDate"    column="test_date"    />
+    </resultMap>
+
+    <sql id="selectScaleTaskScoreVo">
+        select id, scale_id, task_id, patient_id, score, workstation, test_date from scale_task_score
+    </sql>
+
+    <select id="selectScaleTaskScoreList" parameterType="ScaleTaskScore" resultMap="ScaleTaskScoreResult">
+        <include refid="selectScaleTaskScoreVo"/>
+        <where>  
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="workstation != null  and workstation != ''"> and workstation = #{workstation}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleTaskScoreById" parameterType="Long" resultMap="ScaleTaskScoreResult">
+        <include refid="selectScaleTaskScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertScaleTaskScore" parameterType="ScaleTaskScore" useGeneratedKeys="true" keyProperty="id">
+        insert into scale_task_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="score != null ">score,</if>
+            <if test="workstation != null  and workstation != ''">workstation,</if>
+            <if test="testDate != null ">test_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="taskId != null ">#{taskId},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="workstation != null  and workstation != ''">#{workstation},</if>
+            <if test="testDate != null ">#{testDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleTaskScore" parameterType="ScaleTaskScore">
+        update scale_task_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="workstation != null  and workstation != ''">workstation = #{workstation},</if>
+            <if test="testDate != null ">test_date = #{testDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScaleTaskScoreById" parameterType="Long">
+        delete from scale_task_score where id = #{id}
+    </delete>
+
+    <delete id="deleteScaleTaskScoreByIds" parameterType="String">
+        delete from scale_task_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

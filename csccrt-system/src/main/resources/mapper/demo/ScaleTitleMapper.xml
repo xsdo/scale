@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ScaleTitleMapper">
+    
+    <resultMap type="ScaleTitle" id="ScaleTitleResult">
+        <result property="id"    column="id"    />
+        <result property="grade"    column="grade"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="optionA"    column="option_a"    />
+        <result property="optionB"    column="option_b"    />
+        <result property="optionC"    column="option_c"    />
+        <result property="optionD"    column="option_d"    />
+        <result property="optionE"    column="option_e"    />
+        <result property="optionF"    column="option_f"    />
+        <result property="optionG"    column="option_g"    />
+    </resultMap>
+
+    <sql id="selectScaleTitleVo">
+        select id, grade, scale_id, title, content, option_a, option_b, option_c, option_d, option_e, option_f, option_g from scale_title
+    </sql>
+
+    <select id="selectScaleTitleList" parameterType="ScaleTitle" resultMap="ScaleTitleResult">
+        <include refid="selectScaleTitleVo"/>
+        <where>  
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="optionA != null  and optionA != ''"> and option_a = #{optionA}</if>
+            <if test="optionB != null  and optionB != ''"> and option_b = #{optionB}</if>
+            <if test="optionC != null  and optionC != ''"> and option_c = #{optionC}</if>
+            <if test="optionD != null  and optionD != ''"> and option_d = #{optionD}</if>
+            <if test="optionE != null  and optionE != ''"> and option_e = #{optionE}</if>
+            <if test="optionF != null  and optionF != ''"> and option_f = #{optionF}</if>
+            <if test="optionG != null  and optionG != ''"> and option_g = #{optionG}</if>
+        </where>
+    </select>
+    
+    <select id="selectScaleTitleById" parameterType="Long" resultMap="ScaleTitleResult">
+        <include refid="selectScaleTitleVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectScaleTitleListByScaleId" parameterType="Long" resultMap="ScaleTitleResult">
+        <include refid="selectScaleTitleVo"/>
+        where scale_id = #{scaleId}
+    </select>
+        
+    <insert id="insertScaleTitle" parameterType="ScaleTitle" useGeneratedKeys="true" keyProperty="id">
+        insert into scale_title
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="optionA != null  and optionA != ''">option_a,</if>
+            <if test="optionB != null  and optionB != ''">option_b,</if>
+            <if test="optionC != null  and optionC != ''">option_c,</if>
+            <if test="optionD != null  and optionD != ''">option_d,</if>
+            <if test="optionE != null  and optionE != ''">option_e,</if>
+            <if test="optionF != null  and optionF != ''">option_f,</if>
+            <if test="optionG != null  and optionG != ''">option_g,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">#{grade},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="optionA != null  and optionA != ''">#{optionA},</if>
+            <if test="optionB != null  and optionB != ''">#{optionB},</if>
+            <if test="optionC != null  and optionC != ''">#{optionC},</if>
+            <if test="optionD != null  and optionD != ''">#{optionD},</if>
+            <if test="optionE != null  and optionE != ''">#{optionE},</if>
+            <if test="optionF != null  and optionF != ''">#{optionF},</if>
+            <if test="optionG != null  and optionG != ''">#{optionG},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScaleTitle" parameterType="ScaleTitle">
+        update scale_title
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade = #{grade},</if>
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="optionA != null  and optionA != ''">option_a = #{optionA},</if>
+            <if test="optionB != null  and optionB != ''">option_b = #{optionB},</if>
+            <if test="optionC != null  and optionC != ''">option_c = #{optionC},</if>
+            <if test="optionD != null  and optionD != ''">option_d = #{optionD},</if>
+            <if test="optionE != null  and optionE != ''">option_e = #{optionE},</if>
+            <if test="optionF != null  and optionF != ''">option_f = #{optionF},</if>
+            <if test="optionG != null  and optionG != ''">option_g = #{optionG},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScaleTitleById" parameterType="Long">
+        delete from scale_title where id = #{id}
+    </delete>
+
+    <delete id="deleteScaleTitleByIds" parameterType="String">
+        delete from scale_title where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

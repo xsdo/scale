@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.SysHometownMapper">
+    
+    <resultMap type="SysHometown" id="SysHometownResult">
+        <result property="id"    column="id"    />
+        <result property="hometown"    column="hometown"    />
+    </resultMap>
+
+    <sql id="selectSysHometownVo">
+        select id, hometown from sys_hometown
+    </sql>
+
+    <select id="selectSysHometownList" parameterType="SysHometown" resultMap="SysHometownResult">
+        <include refid="selectSysHometownVo"/>
+        <where>  
+            <if test="hometown != null  and hometown != ''"> and hometown = #{hometown}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysHometownById" parameterType="Long" resultMap="SysHometownResult">
+        <include refid="selectSysHometownVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysHometown" parameterType="SysHometown" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_hometown
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hometown != null  and hometown != ''">hometown,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hometown != null  and hometown != ''">#{hometown},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysHometown" parameterType="SysHometown">
+        update sys_hometown
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hometown != null  and hometown != ''">hometown = #{hometown},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysHometownById" parameterType="Long">
+        delete from sys_hometown where id = #{id}
+    </delete>
+
+    <delete id="deleteSysHometownByIds" parameterType="String">
+        delete from sys_hometown where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

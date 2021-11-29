@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzFzyqTypeMapper">
+    
+    <resultMap type="ZzFzyqType" id="ZzFzyqTypeResult">
+        <result property="id"    column="id"    />
+        <result property="grade"    column="grade"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="picUrla"    column="pic_urla"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="picType"    column="pic_type"    />
+    </resultMap>
+
+    <sql id="selectZzFzyqTypeVo">
+        select id, grade, pic_url, pic_urla, video_url, pic_type from zz_fzyq_type
+    </sql>
+
+    <select id="selectZzFzyqTypeList" parameterType="ZzFzyqType" resultMap="ZzFzyqTypeResult">
+        <include refid="selectZzFzyqTypeVo"/>
+        <where>  
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+            <if test="picUrla != null  and picUrla != ''"> and pic_urla = #{picUrla}</if>
+            <if test="videoUrl != null  and videoUrl != ''"> and video_url = #{videoUrl}</if>
+            <if test="picType != null  and picType != ''"> and pic_type = #{picType}</if>
+        </where>
+    </select>
+    
+    <select id="selectZzFzyqTypeById" parameterType="Long" resultMap="ZzFzyqTypeResult">
+        <include refid="selectZzFzyqTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzFzyqType" parameterType="ZzFzyqType" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_fzyq_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade,</if>
+            <if test="picUrl != null  and picUrl != ''">pic_url,</if>
+            <if test="picUrla != null  and picUrla != ''">pic_urla,</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url,</if>
+            <if test="picType != null  and picType != ''">pic_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">#{grade},</if>
+            <if test="picUrl != null  and picUrl != ''">#{picUrl},</if>
+            <if test="picUrla != null  and picUrla != ''">#{picUrla},</if>
+            <if test="videoUrl != null  and videoUrl != ''">#{videoUrl},</if>
+            <if test="picType != null  and picType != ''">#{picType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzFzyqType" parameterType="ZzFzyqType">
+        update zz_fzyq_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade = #{grade},</if>
+            <if test="picUrl != null  and picUrl != ''">pic_url = #{picUrl},</if>
+            <if test="picUrla != null  and picUrla != ''">pic_urla = #{picUrla},</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url = #{videoUrl},</if>
+            <if test="picType != null  and picType != ''">pic_type = #{picType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzFzyqTypeById" parameterType="Long">
+        delete from zz_fzyq_type where id = #{id}
+    </delete>
+
+    <delete id="deleteZzFzyqTypeByIds" parameterType="String">
+        delete from zz_fzyq_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

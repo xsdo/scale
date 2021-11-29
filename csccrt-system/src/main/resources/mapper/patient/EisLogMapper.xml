@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.EisLogMapper">
+    
+    <resultMap type="EisLog" id="EisLogResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="education"    column="education"    />
+        <result property="job"    column="job"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="testDay"    column="test_day"    />
+        <result property="qxzj"    column="qxzj"    />
+        <result property="zwqx"    column="zwqx"    />
+        <result property="trqx"    column="trqx"    />
+        <result property="qxbd"    column="qxbd"    />
+        <result property="sum"    column="sum"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectEisLogVo">
+        select id, patient_id, patient_name, sex, age, education, job, diagnosis, test_day, qxzj, zwqx, trqx, qxbd, sum, create_by, create_time from eis_log
+    </sql>
+
+    <select id="selectEisLogList" parameterType="EisLog" resultMap="EisLogResult">
+        <include refid="selectEisLogVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectEisLogById" parameterType="Long" resultMap="EisLogResult">
+        <include refid="selectEisLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEisLog" parameterType="EisLog" useGeneratedKeys="true" keyProperty="id">
+        insert into eis_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="job != null  and job != ''">job,</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis,</if>
+            <if test="testDay != null ">test_day,</if>
+            <if test="qxzj != null ">qxzj,</if>
+            <if test="zwqx != null ">zwqx,</if>
+            <if test="trqx != null ">trqx,</if>
+            <if test="qxbd != null ">qxbd,</if>
+            <if test="sum != null ">sum,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="job != null  and job != ''">#{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">#{diagnosis},</if>
+            <if test="testDay != null ">#{testDay},</if>
+            <if test="qxzj != null ">#{qxzj},</if>
+            <if test="zwqx != null ">#{zwqx},</if>
+            <if test="trqx != null ">#{trqx},</if>
+            <if test="qxbd != null ">#{qxbd},</if>
+            <if test="sum != null ">#{sum},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEisLog" parameterType="EisLog">
+        update eis_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="job != null  and job != ''">job = #{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis = #{diagnosis},</if>
+            <if test="testDay != null ">test_day = #{testDay},</if>
+            <if test="qxzj != null ">qxzj = #{qxzj},</if>
+            <if test="zwqx != null ">zwqx = #{zwqx},</if>
+            <if test="trqx != null ">trqx = #{trqx},</if>
+            <if test="qxbd != null ">qxbd = #{qxbd},</if>
+            <if test="sum != null ">sum = #{sum},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEisLogById" parameterType="Long">
+        delete from eis_log where id = #{id}
+    </delete>
+
+    <delete id="deleteEisLogByIds" parameterType="String">
+        delete from eis_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

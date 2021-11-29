@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.demo.mapper.ZzShtlTypeMapper">
+    
+    <resultMap type="ZzShtlType" id="ZzShtlTypeResult">
+        <result property="id"    column="id"    />
+        <result property="grade"    column="grade"    />
+        <result property="title"    column="title"    />
+        <result property="aUrla"    column="a_urla"    />
+        <result property="aUrlb"    column="a_urlb"    />
+        <result property="bUrla"    column="b_urla"    />
+        <result property="bUrlb"    column="b_urlb"    />
+        <result property="cUrla"    column="c_urla"    />
+        <result property="cUrlb"    column="c_urlb"    />
+        <result property="dUrla"    column="d_urla"    />
+        <result property="dUrlb"    column="d_urlb"    />
+        <result property="eUrla"    column="e_urla"    />
+        <result property="eUrlb"    column="e_urlb"    />
+        <result property="fUrla"    column="f_urla"    />
+        <result property="fUrlb"    column="f_urlb"    />
+        <result property="correct"    column="correct"    />
+    </resultMap>
+
+    <sql id="selectZzShtlTypeVo">
+        select id, grade, title, a_urla, a_urlb, b_urla, b_urlb, c_urla, c_urlb, d_urla, d_urlb, e_urla, e_urlb, f_urla, f_urlb, correct from zz_shtl_type
+    </sql>
+
+    <select id="selectZzShtlTypeList" parameterType="ZzShtlType" resultMap="ZzShtlTypeResult">
+        <include refid="selectZzShtlTypeVo"/>
+        <where>  
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="aUrla != null  and aUrla != ''"> and a_urla = #{aUrla}</if>
+            <if test="aUrlb != null  and aUrlb != ''"> and a_urlb = #{aUrlb}</if>
+            <if test="bUrla != null  and bUrla != ''"> and b_urla = #{bUrla}</if>
+            <if test="bUrlb != null  and bUrlb != ''"> and b_urlb = #{bUrlb}</if>
+            <if test="cUrla != null  and cUrla != ''"> and c_urla = #{cUrla}</if>
+            <if test="cUrlb != null  and cUrlb != ''"> and c_urlb = #{cUrlb}</if>
+            <if test="dUrla != null  and dUrla != ''"> and d_urla = #{dUrla}</if>
+            <if test="dUrlb != null  and dUrlb != ''"> and d_urlb = #{dUrlb}</if>
+            <if test="eUrla != null  and eUrla != ''"> and e_urla = #{eUrla}</if>
+            <if test="eUrlb != null  and eUrlb != ''"> and e_urlb = #{eUrlb}</if>
+            <if test="fUrla != null  and fUrla != ''"> and f_urla = #{fUrla}</if>
+            <if test="fUrlb != null  and fUrlb != ''"> and f_urlb = #{fUrlb}</if>
+            <if test="correct != null  and correct != ''"> and correct = #{correct}</if>
+        </where>
+    </select>
+    
+    <select id="selectZzShtlTypeById" parameterType="Long" resultMap="ZzShtlTypeResult">
+        <include refid="selectZzShtlTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertZzShtlType" parameterType="ZzShtlType" useGeneratedKeys="true" keyProperty="id">
+        insert into zz_shtl_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="aUrla != null  and aUrla != ''">a_urla,</if>
+            <if test="aUrlb != null  and aUrlb != ''">a_urlb,</if>
+            <if test="bUrla != null  and bUrla != ''">b_urla,</if>
+            <if test="bUrlb != null  and bUrlb != ''">b_urlb,</if>
+            <if test="cUrla != null  and cUrla != ''">c_urla,</if>
+            <if test="cUrlb != null  and cUrlb != ''">c_urlb,</if>
+            <if test="dUrla != null  and dUrla != ''">d_urla,</if>
+            <if test="dUrlb != null  and dUrlb != ''">d_urlb,</if>
+            <if test="eUrla != null  and eUrla != ''">e_urla,</if>
+            <if test="eUrlb != null  and eUrlb != ''">e_urlb,</if>
+            <if test="fUrla != null  and fUrla != ''">f_urla,</if>
+            <if test="fUrlb != null  and fUrlb != ''">f_urlb,</if>
+            <if test="correct != null  and correct != ''">correct,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">#{grade},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="aUrla != null  and aUrla != ''">#{aUrla},</if>
+            <if test="aUrlb != null  and aUrlb != ''">#{aUrlb},</if>
+            <if test="bUrla != null  and bUrla != ''">#{bUrla},</if>
+            <if test="bUrlb != null  and bUrlb != ''">#{bUrlb},</if>
+            <if test="cUrla != null  and cUrla != ''">#{cUrla},</if>
+            <if test="cUrlb != null  and cUrlb != ''">#{cUrlb},</if>
+            <if test="dUrla != null  and dUrla != ''">#{dUrla},</if>
+            <if test="dUrlb != null  and dUrlb != ''">#{dUrlb},</if>
+            <if test="eUrla != null  and eUrla != ''">#{eUrla},</if>
+            <if test="eUrlb != null  and eUrlb != ''">#{eUrlb},</if>
+            <if test="fUrla != null  and fUrla != ''">#{fUrla},</if>
+            <if test="fUrlb != null  and fUrlb != ''">#{fUrlb},</if>
+            <if test="correct != null  and correct != ''">#{correct},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZzShtlType" parameterType="ZzShtlType">
+        update zz_shtl_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="grade != null  and grade != ''">grade = #{grade},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="aUrla != null  and aUrla != ''">a_urla = #{aUrla},</if>
+            <if test="aUrlb != null  and aUrlb != ''">a_urlb = #{aUrlb},</if>
+            <if test="bUrla != null  and bUrla != ''">b_urla = #{bUrla},</if>
+            <if test="bUrlb != null  and bUrlb != ''">b_urlb = #{bUrlb},</if>
+            <if test="cUrla != null  and cUrla != ''">c_urla = #{cUrla},</if>
+            <if test="cUrlb != null  and cUrlb != ''">c_urlb = #{cUrlb},</if>
+            <if test="dUrla != null  and dUrla != ''">d_urla = #{dUrla},</if>
+            <if test="dUrlb != null  and dUrlb != ''">d_urlb = #{dUrlb},</if>
+            <if test="eUrla != null  and eUrla != ''">e_urla = #{eUrla},</if>
+            <if test="eUrlb != null  and eUrlb != ''">e_urlb = #{eUrlb},</if>
+            <if test="fUrla != null  and fUrla != ''">f_urla = #{fUrla},</if>
+            <if test="fUrlb != null  and fUrlb != ''">f_urlb = #{fUrlb},</if>
+            <if test="correct != null  and correct != ''">correct = #{correct},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZzShtlTypeById" parameterType="Long">
+        delete from zz_shtl_type where id = #{id}
+    </delete>
+
+    <delete id="deleteZzShtlTypeByIds" parameterType="String">
+        delete from zz_shtl_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

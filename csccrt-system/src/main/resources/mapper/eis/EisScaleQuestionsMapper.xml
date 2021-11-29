@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.eis.mapper.EisScaleQuestionsMapper">
+    
+    <resultMap type="EisScaleQuestions" id="EisScaleQuestionsResult">
+        <result property="id"    column="id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="answerA"    column="answer_a"    />
+        <result property="answerB"    column="answer_b"    />
+        <result property="answerC"    column="answer_c"    />
+        <result property="answerD"    column="answer_d"    />
+        <result property="answerE"    column="answer_e"    />
+        <result property="answerF"    column="answer_f"    />
+        <result property="answerG"    column="answer_g"    />
+    </resultMap>
+
+    <sql id="selectEisScaleQuestionsVo">
+        select id, scale_id, title, content, answer_a, answer_b, answer_c, answer_d ,answer_e ,answer_f ,answer_g from eis_scale_questions
+    </sql>
+
+    <select id="selectEisScaleQuestionsList" parameterType="EisScaleQuestions" resultMap="EisScaleQuestionsResult">
+        <include refid="selectEisScaleQuestionsVo"/>
+        <where>  
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="answerA != null  and answerA != ''"> and answer_a = #{answerA}</if>
+            <if test="answerB != null  and answerB != ''"> and answer_b = #{answerB}</if>
+            <if test="answerC != null  and answerC != ''"> and answer_c = #{answerC}</if>
+            <if test="answerD != null  and answerD != ''"> and answer_d = #{answerD}</if>
+            <if test="answerE != null  and answerE != ''"> and answer_e = #{answerE}</if>
+            <if test="answerF != null  and answerF != ''"> and answer_f = #{answerF}</if>
+            <if test="answerG != null  and answerG != ''"> and answer_g = #{answerG}</if>
+        </where>
+    </select>
+    
+    <select id="selectEisScaleQuestionsById" parameterType="Long" resultMap="EisScaleQuestionsResult">
+        <include refid="selectEisScaleQuestionsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectEisScaleQuestionsByScaleId" parameterType="Long" resultMap="EisScaleQuestionsResult">
+        <include refid="selectEisScaleQuestionsVo"/>
+        where scale_id = #{scaleId}
+    </select>
+
+
+    <select id="selectEisScaleQuestionsByTitle" parameterType="String" resultMap="EisScaleQuestionsResult">
+        <include refid="selectEisScaleQuestionsVo"/>
+        where title = #{title}
+    </select>
+        
+    <insert id="insertEisScaleQuestions" parameterType="EisScaleQuestions" useGeneratedKeys="true" keyProperty="id">
+        insert into eis_scale_questions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="answerA != null  and answerA != ''">answer_a,</if>
+            <if test="answerB != null  and answerB != ''">answer_b,</if>
+            <if test="answerC != null  and answerC != ''">answer_c,</if>
+            <if test="answerD != null  and answerD != ''">answer_d,</if>
+            <if test="answerE != null  and answerE != ''">answer_e,</if>
+            <if test="answerF != null  and answerF != ''">answer_f,</if>
+            <if test="answerG != null  and answerG != ''">answer_g,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="answerA != null  and answerA != ''">#{answerA},</if>
+            <if test="answerB != null  and answerB != ''">#{answerB},</if>
+            <if test="answerC != null  and answerC != ''">#{answerC},</if>
+            <if test="answerD != null  and answerD != ''">#{answerD},</if>
+            <if test="answerE != null  and answerE != ''">#{answerE},</if>
+            <if test="answerF != null  and answerF != ''">#{answerF},</if>
+            <if test="answerG != null  and answerG != ''">#{answerG},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEisScaleQuestions" parameterType="EisScaleQuestions">
+        update eis_scale_questions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="answerA != null  and answerA != ''">answer_a = #{answerA},</if>
+            <if test="answerB != null  and answerB != ''">answer_b = #{answerB},</if>
+            <if test="answerC != null  and answerC != ''">answer_c = #{answerC},</if>
+            <if test="answerD != null  and answerD != ''">answer_d = #{answerD},</if>
+            <if test="answerE != null  and answerE != ''">answer_e = #{answerE},</if>
+            <if test="answerF != null  and answerF != ''">answer_f = #{answerF},</if>
+            <if test="answerG != null  and answerG != ''">answer_g = #{answerG},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEisScaleQuestionsById" parameterType="Long">
+        delete from eis_scale_questions where id = #{id}
+    </delete>
+
+    <delete id="deleteEisScaleQuestionsByIds" parameterType="String">
+        delete from eis_scale_questions where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

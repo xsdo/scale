@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.patient.mapper.SysbLogMapper">
+    
+    <resultMap type="SysbLog" id="SysbLogResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="education"    column="education"    />
+        <result property="job"    column="job"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="testDay"    column="test_day"    />
+        <result property="kzwt"    column="kzwt"    />
+        <result property="sywt"    column="sywt"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysbLogVo">
+        select id, patient_id, patient_name, sex, age, education, job, diagnosis, test_day, kzwt, sywt, create_by, create_time from sysb_log
+    </sql>
+
+    <select id="selectSysbLogList" parameterType="SysbLog" resultMap="SysbLogResult">
+        <include refid="selectSysbLogVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysbLogById" parameterType="Long" resultMap="SysbLogResult">
+        <include refid="selectSysbLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysbLog" parameterType="SysbLog" useGeneratedKeys="true" keyProperty="id">
+        insert into sysb_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="job != null  and job != ''">job,</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis,</if>
+            <if test="testDay != null ">test_day,</if>
+            <if test="kzwt != null ">kzwt,</if>
+            <if test="sywt != null ">sywt,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="job != null  and job != ''">#{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">#{diagnosis},</if>
+            <if test="testDay != null ">#{testDay},</if>
+            <if test="kzwt != null ">#{kzwt},</if>
+            <if test="sywt != null ">#{sywt},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysbLog" parameterType="SysbLog">
+        update sysb_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="job != null  and job != ''">job = #{job},</if>
+            <if test="diagnosis != null  and diagnosis != ''">diagnosis = #{diagnosis},</if>
+            <if test="testDay != null ">test_day = #{testDay},</if>
+            <if test="kzwt != null ">kzwt = #{kzwt},</if>
+            <if test="sywt != null ">sywt = #{sywt},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysbLogById" parameterType="Long">
+        delete from sysb_log where id = #{id}
+    </delete>
+
+    <delete id="deleteSysbLogByIds" parameterType="String">
+        delete from sysb_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

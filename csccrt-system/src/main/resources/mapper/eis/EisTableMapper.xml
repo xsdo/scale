@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qx.eis.mapper.EisTableMapper">
+    
+    <resultMap type="EisTable" id="EisTableResult">
+        <result property="tableId"    column="table_id"    />
+        <result property="scaleId"    column="scale_id"    />
+        <result property="tableName"    column="tabl_name"    />
+        <result property="grade"    column="grade"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="tableComment"    column="table_comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time   "    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEisTableVo">
+        select table_id,scale_id,tabl_name,grade,task_status,del_flag,table_comment,create_time,update_time,remark
+         from eis_table
+    </sql>
+
+    <select id="selectEisTableList" parameterType="EisTable" resultMap="EisTableResult">
+        <include refid="selectEisTableVo"/>
+        <where>
+            <if test="scaleId != null "> and scale_id = #{scaleId}</if>
+            <if test="tableName != null "> and tabl_name = #{tableName}</if>
+            <if test="grade != null "> and grade = #{grade}</if>
+            <if test="taskStatus != null "> and task_status = #{taskStatus}</if>
+            <if test="delFlag != null "> and del_flag = #{delFlag}</if>
+            <if test="tableComment != null  and tableComment != ''"> and table_comment = #{tableComment}</if>
+        </where>
+    </select>
+    
+    <select id="selectEisTableById" parameterType="Long" resultMap="EisTableResult">
+        <include refid="selectEisTableVo"/>
+        where table_id = #{tableId}
+    </select>
+
+
+    <select id="selectEisTables" parameterType="Long" resultMap="EisTableResult">
+        <include refid="selectEisTableVo"/>
+        where del_flag = #{delFlag}
+    </select>
+
+    <select id="selectEisTableByScaleId" parameterType="Long" resultMap="EisTableResult">
+        <include refid="selectEisTableVo"/>
+        where scale_id= #{scaleId}
+    </select>
+
+    <insert id="insertEisTable" parameterType="EisTable">
+        insert into eis_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tableId != null ">table_id,</if>
+            <if test="scaleId != null ">scale_id,</if>
+            <if test="tableName != null ">tabl_name,</if>
+            <if test="grade != null ">grade,</if>
+            <if test="taskStatus != null ">task_status,</if>
+            <if test="delFlag != null ">del_flag,</if>
+            <if test="tableComment != null  and tableComment != ''">table_comment,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tableId != null ">#{tableId},</if>
+            <if test="scaleId != null ">#{scaleId},</if>
+            <if test="tableName != null ">#{tableName},</if>
+            <if test="grade != null ">#{grade},</if>
+            <if test="taskStatus != null ">#{taskStatus},</if>
+            <if test="delFlag != null ">#{delFlag},</if>
+            <if test="tableComment != null  and tableComment != ''">#{tableComment},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEisTable" parameterType="EisTable">
+        update eis_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scaleId != null ">scale_id = #{scaleId},</if>
+            <if test="tableName != null ">tabl_name = #{tableName},</if>
+            <if test="grade != null ">grade = #{grade},</if>
+            <if test="taskStatus != null ">task_status = #{taskStatus},</if>
+            <if test="delFlag != null ">del_flag = #{delFlag},</if>
+            <if test="tableComment != null ">table_comment = #{tableComment},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where table_id = #{tableId}
+    </update>
+
+    <delete id="deleteEisTableById" parameterType="Long">
+        delete from eis_table where table_id = #{tableId}
+    </delete>
+
+    <delete id="deleteEisTableByIds" parameterType="String">
+        delete from eis_table where table_id in
+        <foreach item="tableId" collection="array" open="(" separator="," close=")">
+            #{tableId}
+        </foreach>
+    </delete>
+    
+</mapper>
