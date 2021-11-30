@@ -136,6 +136,7 @@ public class SapsWord {
         String string="";
         String str="";
         String str1="";
+        String n="\r";
         List<String>strings=new ArrayList<>();
 
         if (score1<3&&score2<3&&score3<3&&score4<3){
@@ -143,19 +144,19 @@ public class SapsWord {
         }else {
             if (score1>=3){
                 strings.add("幻觉");
-                str1+="幻觉：知觉异常，即在没有相应外界刺激的情况下发生虚幻的知觉。听到语声、杂音或其他声音；体验到特殊的躯体感觉，如灼烧感、刺痛感，或感到身体的形状或大小发生变化；能闻到令其不愉快的气味；能看见实际上并不存在的人或物。";
+                str1+=n+"幻觉：知觉异常，即在没有相应外界刺激的情况下发生虚幻的知觉。听到语声、杂音或其他声音；体验到特殊的躯体感觉，如灼烧感、刺痛感，或感到身体的形状或大小发生变化；能闻到令其不愉快的气味；能看见实际上并不存在的人或物。";
             }
             if (score2>=3){
                 strings.add("妄想");
-                str1+="妄想：思维内容异常，即存在不能以自身文化背景来解释的错误信念。感到被人跟踪或迫害；认为配偶与某人有不正当的男女关系；自认犯有可怕的罪行或拥有特殊的权利或能力；沉湎于带宗教色彩的错误信念；自认身体有病或不正常；认为无关紧要的谈话、评述或事件都与自己有关；体验到感情或行动被外界力量控制；认为人们能读出自己的心理；相信自己思想被广播，被抽走或被插入。";
+                str1+=n+"妄想：思维内容异常，即存在不能以自身文化背景来解释的错误信念。感到被人跟踪或迫害；认为配偶与某人有不正当的男女关系；自认犯有可怕的罪行或拥有特殊的权利或能力；沉湎于带宗教色彩的错误信念；自认身体有病或不正常；认为无关紧要的谈话、评述或事件都与自己有关；体验到感情或行动被外界力量控制；认为人们能读出自己的心理；相信自己思想被广播，被抽走或被插入。";
             }
             if (score3>=3){
                 strings.add("怪异行为");
-                str1+="怪异行为：行为很不寻常，怪异或带幻想性。衣着奇特或以其他稀奇古怪的方式来改变其外观；做出一些与社会一般规范不相称的事；行为方式具有攻击性和激越性，常常难以预料；做出一套重复性或仪式性的动作，往往认为这些动作有象征意义，或可以影响他人，或可使自己免受影响。";
+                str1+=n+"怪异行为：行为很不寻常，怪异或带幻想性。衣着奇特或以其他稀奇古怪的方式来改变其外观；做出一些与社会一般规范不相称的事；行为方式具有攻击性和激越性，常常难以预料；做出一套重复性或仪式性的动作，往往认为这些动作有象征意义，或可以影响他人，或可使自己免受影响。";
             }
             if (score4>=3){
                 strings.add("阳性思维形式障碍");
-                str1+="阳性思维形式障碍：讲话虽流利，但常突然从一个话题滑到另一间接有关或完全无关的话题；对问题的回答含糊、不切题，甚至无关；言语不连贯；言语的推理结论明显不合逻辑；表达主题迂回曲折；与日常习惯相比，自发性语量较多，语速快且难打断；在交谈时，话讲到一半就转移到有关周围事物的主题上；根据词音而不是词意来选用词汇，言语含糊，难以理解。";
+                str1+=n+"阳性思维形式障碍：讲话虽流利，但常突然从一个话题滑到另一间接有关或完全无关的话题；对问题的回答含糊、不切题，甚至无关；言语不连贯；言语的推理结论明显不合逻辑；表达主题迂回曲折；与日常习惯相比，自发性语量较多，语速快且难打断；在交谈时，话讲到一半就转移到有关周围事物的主题上；根据词音而不是词意来选用词汇，言语含糊，难以理解。";
             }
             for (String s:strings){
                 if (s!=strings.get(strings.size()-1)){
@@ -202,7 +203,9 @@ public class SapsWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -211,6 +214,24 @@ public class SapsWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
 
 

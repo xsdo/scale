@@ -119,6 +119,7 @@ public class KrawieckaWord {
         String string="";
         String str="";
         String str1="";
+        String n="\r";
         List<String>strings=new ArrayList<>();
 
         if (scoreA<2&&scoreB<2&&scoreC<2&&scoreD<2&&scoreE<2&&scoreF<2&&scoreG<2&&scoreH<2){
@@ -142,28 +143,28 @@ public class KrawieckaWord {
             string="其中"+str+"症状（得分为2的项目）达到病态程度。";
         }else {
             if (scoreA>=3){ strings.add("抑郁");
-            str1+="抑郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。";
+            str1+=n+"抑郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。";
             }
             if (scoreB>=3){strings.add("焦虑");
-                str1+="焦虑：感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
+                str1+=n+"焦虑：感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
             }
             if (scoreC>=3){strings.add("情感平淡或不协调");
-                str1+="情感平淡或不协调：应该有的情感反应在幅度和范围上有缺损，在谈到自己情况时并不表达出客观事件对自己的心理影响，如谈到亲近的人们时没有热情。";
+                str1+=n+"情感平淡或不协调：应该有的情感反应在幅度和范围上有缺损，在谈到自己情况时并不表达出客观事件对自己的心理影响，如谈到亲近的人们时没有热情。";
             }
             if (scoreD>=3){strings.add("精神运动性迟缓");
-                str1+="精神运动性迟缓：表现为思维、语言及—般动作的缓慢或缺乏主动性，严重时发展到抑郁性、木僵，此时自主动作完全消失。";
+                str1+=n+"精神运动性迟缓：表现为思维、语言及—般动作的缓慢或缺乏主动性，严重时发展到抑郁性、木僵，此时自主动作完全消失。";
             }
             if (scoreE>=3){strings.add("妄想");
-                str1+="妄想：表现为思维内容的异常，会产生一些错误观念，及坚信的妄想。";
+                str1+=n+"妄想：表现为思维内容的异常，会产生一些错误观念，及坚信的妄想。";
             }
             if (scoreF>=3){strings.add("幻觉");
-                str1+="幻觉：表现为知觉方面的异常，在没有相应外界刺激的情况下发生虚幻的知觉。";
+                str1+=n+"幻觉：表现为知觉方面的异常，在没有相应外界刺激的情况下发生虚幻的知觉。";
             }
             if (scoreG>=3){ strings.add("言语散漫或不连贯");
-                str1+="言语散漫或不连贯：言语上杂乱，没有主题，交流时言语不连贯，让人难以理解。";
+                str1+=n+"言语散漫或不连贯：言语上杂乱，没有主题，交流时言语不连贯，让人难以理解。";
             }
             if (scoreH>=3){strings.add("言语贫乏与缄默");
-                str1+="言语贫乏与缄默：自发言语的语量有限，回答问题简单肤浅，很少有自发的补充说明，很可能是单词甚至不回答，严重时很难做有意义的交谈。";
+                str1+=n+"言语贫乏与缄默：自发言语的语量有限，回答问题简单肤浅，很少有自发的补充说明，很可能是单词甚至不回答，严重时很难做有意义的交谈。";
             }
             for (String s:strings){
                 if (s!=strings.get(strings.size()-1)){
@@ -213,7 +214,9 @@ public class KrawieckaWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -222,7 +225,26 @@ public class KrawieckaWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
+
 
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445

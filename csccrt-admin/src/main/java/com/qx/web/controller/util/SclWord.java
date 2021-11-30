@@ -158,6 +158,7 @@ public class SclWord {
         String string="";
         String str="";
         String str1="";
+        String n="\r";
         List<String>strings=new ArrayList<>();
 
         if (s1<=2&&s2<=2&&s3<=2&&s4<=2&&s5<=2&&s6<=2&&s7<=2&&s8<=2&&s9<=2&&s10<=2){
@@ -165,52 +166,52 @@ public class SclWord {
         }else {
             if (s1>2){
                 strings.add("躯体化");
-                str1+="躯体化：近期您的身体感觉不适，包括心血管、胃肠道、呼吸等方面的不适，并伴有头痛、背痛、肌肉酸痛，以及焦虑的其他躯体表现。";
+                str1+=n+"躯体化：近期您的身体感觉不适，包括心血管、胃肠道、呼吸等方面的不适，并伴有头痛、背痛、肌肉酸痛，以及焦虑的其他躯体表现。";
                 count++;
             }
             if (s2>2){
                 strings.add("强迫症状");
-                str1+="强迫症状：近期您无法摆脱一些无意义的思想、冲动和行为。";
+                str1+=n+"强迫症状：近期您无法摆脱一些无意义的思想、冲动和行为。";
                 count++;
             }
             if (s3>2){
                 strings.add("人际关系敏感");
-                str1+="人际关系敏感：近期您在人际交往中表现出自卑感，心神不安，明显不自在以及消极期待等特征。";
+                str1+=n+"人际关系敏感：近期您在人际交往中表现出自卑感，心神不安，明显不自在以及消极期待等特征。";
                 count++;
             }
             if (s4>2){
                 strings.add("抑郁");
-                str1+="抑郁：近期您感觉苦闷，生活兴趣减退，动力缺乏，活力丧失，失望悲观等。另外，可能会出现与死亡有关的思想和自杀观念。";
+                str1+=n+"抑郁：近期您感觉苦闷，生活兴趣减退，动力缺乏，活力丧失，失望悲观等。另外，可能会出现与死亡有关的思想和自杀观念。";
                 count++;
             }
             if (s5>2){
                 strings.add("焦虑");
-                str1+="焦虑：近期您体验到烦燥，坐立不安，神经过敏，紧张以及由此产生的躯体征象，如：出汗、震颤、心悸等。";
+                str1+=n+"焦虑：近期您体验到烦燥，坐立不安，神经过敏，紧张以及由此产生的躯体征象，如：出汗、震颤、心悸等。";
                 count++;
             }
             if (s6>2){
                 strings.add("敌对");
-                str1+="敌对：近期您有厌烦的感觉，可能表现为摔物，好争论，脾气暴发等。";
+                str1+=n+"敌对：近期您有厌烦的感觉，可能表现为摔物，好争论，脾气暴发等。";
                 count++;
             }
             if (s7>2){
                 strings.add("恐怖");
-                str1+="恐怖：近期您出现了较明显的恐惧情绪，恐惧的对象可能为出门旅行，空旷场地，人群，或公共场所和交通工具等。";
+                str1+=n+"恐怖：近期您出现了较明显的恐惧情绪，恐惧的对象可能为出门旅行，空旷场地，人群，或公共场所和交通工具等。";
                 count++;
             }
             if (s8>2){
                 strings.add("偏执");
-                str1+="偏执：近期您表现出了一些偏执性思维，如：敌对、猜疑、妄想、被动体验和夸大等。";
+                str1+=n+"偏执：近期您表现出了一些偏执性思维，如：敌对、猜疑、妄想、被动体验和夸大等。";
                 count++;
             }
             if (s9>2){
                 strings.add("精神病性");
-                str1+="精神病性：近期您出现了一些较为明显的精神病性症状。建议您就诊精神科做进一步检测。";
+                str1+=n+"精神病性：近期您出现了一些较为明显的精神病性症状。建议您就诊精神科做进一步检测。";
                 count++;
             }
             if (s10>2){
                 strings.add("其他");
-                str1+="其他：近期您出现了睡眠不良，饮食不规律以及负罪感等。";
+                str1+=n+"其他：近期您出现了睡眠不良，饮食不规律以及负罪感等。";
                 count++;
             }
             for (String s:strings){
@@ -220,7 +221,7 @@ public class SclWord {
                     str+=s;
                 }
             }
-            string="阳性项目数为"+count+"项，超过2分的因子有"+str+"。表明："+str1;
+            string="阳性项目数为"+count+"项，超过2分的因子有"+str+"。"+n+"表明："+str1;
         }
 
         textMap.put("var", "本次测验总分为"+score+"分，"+string);
@@ -261,7 +262,9 @@ public class SclWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -270,6 +273,24 @@ public class SclWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
 
 

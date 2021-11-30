@@ -104,7 +104,7 @@ public class GhqWord {
         // 文本数据
         Map<String, String> textMap = new HashMap<String, String>();
         String string="";
-        String str="\r\n";
+        String str="";
 
         Long score=0L;
         //测验分类分数数据
@@ -125,14 +125,14 @@ public class GhqWord {
             textMap.put("var"+scaleScoreList.get(i).getTitle(),scaleScoreList.get(i).getScore()+string);
             score+=scaleScoreList.get(i).getScore();
             if (scaleScoreList.get(i).getScore()==1){
-                str+="\r\n"+score+"、"+strMap.get(scaleScoreList.get(i).getTitle());
+                str+="\r"+score+"、"+strMap.get(scaleScoreList.get(i).getTitle());
             }
         }
 //        XWPFRun R=doc.createParagraph().createRun();
         if (score==0){
             textMap.put("var", "本次测验总分为"+score+"分，具临床意义的症状有"+score+"项。表明近期您的身心处于健康水平，请继续保持！");
         }else {
-            textMap.put("var", "本次测验总分为"+score+"分，具临床意义的症状有"+score+"项。表明："
+            textMap.put("var", "本次测验总分为"+score+"分，具临床意义的症状有"+score+"项。"+"\r"+"表明："
             +str);
 //            R.addBreak();
         }
@@ -167,7 +167,9 @@ public class GhqWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -176,6 +178,24 @@ public class GhqWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445

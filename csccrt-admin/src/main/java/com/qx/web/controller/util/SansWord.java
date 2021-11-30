@@ -138,6 +138,7 @@ public class SansWord {
         String string="";
         String str="";
         String str1="";
+        String n="\r";
         List<String>strings=new ArrayList<>();
 
         if (score1<3&&score2<3&&score3<3&&score4<3&&score5<3){
@@ -145,23 +146,23 @@ public class SansWord {
         }else {
             if (score1>=3){
                 strings.add("感情平淡或迟钝");
-                str1+="情感平淡或迟钝：特征性表情、感受和反应的贫乏。在交谈过程中，缺乏面部表情；缺乏手势或姿势的变换；避免和他人的眼神接触；在说笑或开玩笑时都不易引出笑容；语声单调，缺乏正常的抑扬顿挫。";
+                str1+=n+"情感平淡或迟钝：特征性表情、感受和反应的贫乏。在交谈过程中，缺乏面部表情；缺乏手势或姿势的变换；避免和他人的眼神接触；在说笑或开玩笑时都不易引出笑容；语声单调，缺乏正常的抑扬顿挫。";
             }
             if (score2>=3){
                 strings.add("思维贫乏");
-                str1+="思维贫乏：语量或言语内容的贫乏。自发言语的语量有限，回答问题简单肤浅，很少有自发的补充说明；回答问题的语量够，但不能提供充分信息，内容含糊，过于抽象或过于具体、重复或刻板；在一种思维或一个概念结束之前，语流中断。";
+                str1+=n+"思维贫乏：语量或言语内容的贫乏。自发言语的语量有限，回答问题简单肤浅，很少有自发的补充说明；回答问题的语量够，但不能提供充分信息，内容含糊，过于抽象或过于具体、重复或刻板；在一种思维或一个概念结束之前，语流中断。";
             }
             if (score3>=3){
                 strings.add("意志缺乏");
-                str1+="意志缺乏：缺少精力和兴趣，不能主动发起或坚持完成各项任务。比常人不注意衣着及个人卫生；难以找到或维持一个与其年龄、性别相适应的职业（或学业）；懒于动弹，常常坐着无所事事。";
+                str1+=n+"意志缺乏：缺少精力和兴趣，不能主动发起或坚持完成各项任务。比常人不注意衣着及个人卫生；难以找到或维持一个与其年龄、性别相适应的职业（或学业）；懒于动弹，常常坐着无所事事。";
             }
             if (score4>=3){
                 strings.add("兴趣/社交缺乏");
-                str1+="兴趣/社交缺乏：极少或没有任何兴趣或爱好；主观上感到没有性欲；感到难以与人建立亲密的感情；与朋友和同龄人之间交往范围狭小，很少或没有朋友，几乎所有时间都独自一人。";
+                str1+=n+"兴趣/社交缺乏：极少或没有任何兴趣或爱好；主观上感到没有性欲；感到难以与人建立亲密的感情；与朋友和同龄人之间交往范围狭小，很少或没有朋友，几乎所有时间都独自一人。";
             }
             if (score5>=3){
                 strings.add("注意障碍");
-                str1+="注意障碍：不介入或不参与社会工作或活动，看起来有种“隔阂感”或是“局外人”；在游戏、阅读或看电话时注意力不集中；尽管有相当的文化和智力水平，但简单的智能测试成绩却较差。";
+                str1+=n+"注意障碍：不介入或不参与社会工作或活动，看起来有种“隔阂感”或是“局外人”；在游戏、阅读或看电话时注意力不集中；尽管有相当的文化和智力水平，但简单的智能测试成绩却较差。";
             }
             for (String s:strings){
                 if (s!=strings.get(strings.size()-1)){
@@ -210,7 +211,9 @@ public class SansWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -219,7 +222,26 @@ public class SansWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
+
 
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445

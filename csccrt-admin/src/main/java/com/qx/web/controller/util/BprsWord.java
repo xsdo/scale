@@ -116,6 +116,7 @@ public class BprsWord {
         Map<String, String> textMap = new HashMap<String, String>();
         String string="";
         String str="";
+        String n="\r";
         List<String>strings=new ArrayList<>();
 
         Long score=scoreA+scoreB+scoreC+scoreD+scoreE;
@@ -123,19 +124,19 @@ public class BprsWord {
             string="表明无精神病性症状。";
         }else if (scoreA>16||scoreB>16||scoreC>16||scoreD>12||scoreE>12){
             if (scoreA>16){
-                str+="焦虑忧郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。对以往言行过分关心、内疚或懊悔，感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
+                str+=n+"焦虑忧郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。对以往言行过分关心、内疚或懊悔，感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
             }
             if (scoreB>16){
-                str+="缺乏活力：无法实现正常的情感交流，感情基调低，缺乏相应的正常情感反应，言语动作和行为表现减少和缓慢，对人物、地点或时间可能分辨不清。";
+                str+=n+"缺乏活力：无法实现正常的情感交流，感情基调低，缺乏相应的正常情感反应，言语动作和行为表现减少和缓慢，对人物、地点或时间可能分辨不清。";
             }
             if (scoreC>16){
-                str+="思维障碍：表现为联想困难、对问题反应迟钝，有时概念停留很长时间，不能顺利地表达出来，有时再三提问，才能得到回答。或确信自己具有不寻常的才能和权力，出现幻觉或古怪的思维内容。";
+                str+=n+"思维障碍：表现为联想困难、对问题反应迟钝，有时概念停留很长时间，不能顺利地表达出来，有时再三提问，才能得到回答。或确信自己具有不寻常的才能和权力，出现幻觉或古怪的思维内容。";
             }
             if (scoreD>16){
-                str+="激活性：出现躯体性焦虑，如：心跳加快、胸闷、呼吸不畅，甚至有窒息的濒危感，不寻常的或不自然的运动性行为，情感基调增高、激动，对外界反应增强。";
+                str+=n+"激活性：出现躯体性焦虑，如：心跳加快、胸闷、呼吸不畅，甚至有窒息的濒危感，不寻常的或不自然的运动性行为，情感基调增高、激动，对外界反应增强。";
             }
             if (scoreE>16){
-                str+="敌对猜疑：对他人的仇恨、敌对和蔑视，认为有人正在或曾经恶意地对待自己，交谈时表现不友好，不满意或不合作的态度。";
+                str+=n+"敌对猜疑：对他人的仇恨、敌对和蔑视，认为有人正在或曾经恶意地对待自己，交谈时表现不友好，不满意或不合作的态度。";
             }
             string="表明："+str;
         }else {
@@ -193,7 +194,9 @@ public class BprsWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
+                for (int i =0;i<runs.size();i++){
+//                for (XWPFRun run : runs) {
+                    XWPFRun run =runs.get(i);
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -202,7 +205,26 @@ public class BprsWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
+                            String runText=textMap.get(key);
+                            if (runText.indexOf("\r")>0){
+                                String[]texts =runText.split("\r");
+                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
+                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
+                                paragraph.removeRun(i);
+                                run=paragraph.insertNewRun(i);
+                                for (int f=0;f<texts.length;f++){
+                                    if(f==0){
+                                        run.setText(texts[f].trim());
+                                    }else {
+//                                        run.addCarriageReturn();
+                                        run.addBreak();
+                                        run.setText("    "+texts[f].trim());
+                                    }
+
+                                }
+                            }
                         }
+
 
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445
