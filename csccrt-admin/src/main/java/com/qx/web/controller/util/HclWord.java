@@ -2,6 +2,7 @@ package com.qx.web.controller.util;
 
 import com.qx.common.config.ProjectConfig;
 import com.qx.scale.domain.ScalePatient;
+import com.qx.scale.domain.ScaleQuestions;
 import com.qx.scale.domain.ScaleScore;
 import com.qx.scale.domain.ScaleTask;
 import org.apache.commons.lang.RandomStringUtils;
@@ -15,23 +16,24 @@ import org.springframework.util.StringUtils;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class BprsWord {
+public class HclWord {
 
-    public static String getDld(ScalePatient scalePatient , ScaleTask scaleTask,String templateurl,List<ScaleScore> scaleScoreList) {
+    public static String getDld(ScalePatient scalePatient , ScaleTask scaleTask,String templateurl,List<ScaleScore> scaleScoreList,List<ScaleQuestions>scaleQuestionsList) {
         FileSystemView fsv = FileSystemView.getFileSystemView();
         File com=fsv.getHomeDirectory();
         String filenameRandom= RandomStringUtils.randomNumeric(6);
-        String fileName=scalePatient.getPatientName()+"_"+scaleTask.getTestCoding()+filenameRandom+"_bprs.docx";  // 结果文件
+        String fileName=scalePatient.getPatientName()+"_"+scaleTask.getTestCoding()+filenameRandom+"_hcl.docx";  // 结果文件
         String returnurl= ProjectConfig.getDownloadPath()+fileName;
         // 替换word模板数据
         XWPFDocument doc=null;
         try {
             InputStream is = new FileInputStream(new File(templateurl));
              doc = new XWPFDocument(is);
-            replaceAll(doc,scalePatient,scaleTask,scaleScoreList);
+            replaceAll(doc,scalePatient,scaleTask,scaleScoreList,scaleQuestionsList);
         } catch (InvalidFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -62,9 +64,9 @@ public class BprsWord {
     /**
      * @Description: 替换段落和表格中
      */
-    public static void replaceAll(XWPFDocument doc,ScalePatient scalePatient ,ScaleTask scaleTask,List<ScaleScore> scaleScoreList) throws InvalidFormatException, IOException {
-        doParagraphs(doc,scalePatient,scaleTask,scaleScoreList); // 处理段落文字数据，包括文字和表格、图片
-        doCharts(doc,scaleScoreList);  // 处理图表数据，柱状图、折线图、饼图啊之类的
+    public static void replaceAll(XWPFDocument doc,ScalePatient scalePatient ,ScaleTask scaleTask,List<ScaleScore> scaleScoreList,List<ScaleQuestions>scaleQuestionsList) throws InvalidFormatException, IOException {
+        doParagraphs(doc,scalePatient,scaleTask,scaleScoreList,scaleQuestionsList); // 处理段落文字数据，包括文字和表格、图片
+//        doCharts(doc,scaleScoreList);  // 处理图表数据，柱状图、折线图、饼图啊之类的
     }
 
 
@@ -76,7 +78,7 @@ public class BprsWord {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void doParagraphs(XWPFDocument doc,ScalePatient scalePatient ,ScaleTask scaleTask,List<ScaleScore> scaleScoreList) {
+    public static void doParagraphs(XWPFDocument doc,ScalePatient scalePatient ,ScaleTask scaleTask,List<ScaleScore> scaleScoreList,List<ScaleQuestions>scaleQuestionsList) {
          if("0".equals(scalePatient.getSex())){
              scalePatient.setSex("男");
         }else if("1".equals(scalePatient.getSex())){
@@ -93,88 +95,42 @@ public class BprsWord {
          if(scalePatient.getWard()==null){
              scalePatient.setWard("");
          }
-         //
-        Long scoreA=0L;
-        Long scoreB=0L;
-        Long scoreC=0L;
-        Long scoreD=0L;
-        Long scoreE=0L;
-        for (ScaleScore scaleScore:scaleScoreList){
-            if (scaleScore.getTitle().equals("1")||scaleScore.getTitle().equals("2")||scaleScore.getTitle().equals("5")||scaleScore.getTitle().equals("9")){
-                scoreA+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("3")||scaleScore.getTitle().equals("13")||scaleScore.getTitle().equals("16")||scaleScore.getTitle().equals("18")){
-                scoreB+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("4")||scaleScore.getTitle().equals("8")||scaleScore.getTitle().equals("12")||scaleScore.getTitle().equals("15")){
-                scoreC+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("6")||scaleScore.getTitle().equals("7")||scaleScore.getTitle().equals("17")){
-                scoreD+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("10")||scaleScore.getTitle().equals("11")||scaleScore.getTitle().equals("14")){
-                scoreE+=scaleScore.getScore();
-            }
-        }
+
         // 文本数据
         Map<String, String> textMap = new HashMap<String, String>();
         String string="";
         String str="";
-        String n="\r";
-        List<String>strings=new ArrayList<>();
-
-        Long score=scoreA+scoreB+scoreC+scoreD+scoreE;
-        if (score<=18){
-            string="表明无精神病性症状。";
-        }else if (scoreA>16||scoreB>16||scoreC>16||scoreD>12||scoreE>12){
-            if (scoreA>16){
-                str+=n+"焦虑忧郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。对以往言行过分关心、内疚或懊悔，感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
-            }
-            if (scoreB>16){
-                str+=n+"缺乏活力：无法实现正常的情感交流，感情基调低，缺乏相应的正常情感反应，言语动作和行为表现减少和缓慢，对人物、地点或时间可能分辨不清。";
-            }
-            if (scoreC>16){
-                str+=n+"思维障碍：表现为联想困难、对问题反应迟钝，有时概念停留很长时间，不能顺利地表达出来，有时再三提问，才能得到回答。或确信自己具有不寻常的才能和权力，出现幻觉或古怪的思维内容。";
-            }
-            if (scoreD>16){
-                str+=n+"激活性：出现躯体性焦虑，如：心跳加快、胸闷、呼吸不畅，甚至有窒息的濒危感，不寻常的或不自然的运动性行为，情感基调增高、激动，对外界反应增强。";
-            }
-            if (scoreE>16){
-                str+=n+"敌对猜疑：对他人的仇恨、敌对和蔑视，认为有人正在或曾经恶意地对待自己，交谈时表现不友好，不满意或不合作的态度。";
-            }
-            string="表明："+str;
-        }else {
-            if(scoreA>4&&scoreA<=16){
-                strings.add("焦虑忧郁");
-            }
-            if(scoreB>4&&scoreA<=16){
-                strings.add("缺乏活力");
-            }
-            if(scoreC>4&&scoreA<=16){
-                strings.add("思维障碍");
-            }
-            if(scoreD>4&&scoreA<=12){
-                strings.add("激活性");
-            }
-            if(scoreE>4&&scoreA<=12){
-                strings.add("敌对猜疑");
-            }
-            for (String s:strings){
-                if (s!=strings.get(strings.size()-1)){
-                    str+=(s+"、");
-                }else {
-                    str+=s;
+        Long score=0L;
+        List<String>questionsList=new ArrayList<>();
+        for (ScaleScore scaleScore:scaleScoreList){
+            score+=scaleScore.getScore();
+            for (ScaleQuestions scaleQuestions:scaleQuestionsList){
+                if (scaleScore.getTitle().equals(scaleQuestions.getTitle())&&scaleScore.getScore()>0){
+                    questionsList.add(scaleQuestions.getContent().replace("我","您"));
                 }
             }
-            string="其中在"+str+"方面表现出一定的临床症状，需引起重视。";
         }
-        textMap.put("var", "本次测验的总分为"+score+"分，"+string);
+
+        //添加score标签以后续判断是否存在测验结果症状
+        textMap.put("score",score+"");
+
+        if (score>=14){
+            string="双相障碍筛查阳性。";
+        }else {
+            string="双相障碍筛查阴性。";
+        }
+
+        textMap.put("var", "本次测验总分为"+score+"分，表明"+string);
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy.MM.dd");
         Date date =new Date();
         String f=sdf.format(date);
-            textMap.put("var1",f);
+            textMap.put("varA",f);
         // 图片数据
         Map<String, String> imgMap = new HashMap<String, String>();
         imgMap.put("img", "D:\\360Downloads\\aaa.jpg");
         //段落
         List<XWPFParagraph> paragraphList = doc.getParagraphs();
-        doParagraph(paragraphList, doc, textMap, imgMap,scalePatient);
+        doParagraph(paragraphList, doc, textMap, imgMap,scalePatient,questionsList);
 
         //表格
         List<XWPFTable> tables = doc.getTables();
@@ -184,13 +140,21 @@ public class BprsWord {
                 List<XWPFTableCell> tableCells = row.getTableCells();
                 for (XWPFTableCell tableCell : tableCells) {
                     List<XWPFParagraph> paragraphs = tableCell.getParagraphs();
-                    doParagraph(paragraphs, doc, textMap, imgMap,scalePatient);
+                    doParagraph(paragraphs, doc, textMap, imgMap,scalePatient,questionsList);
                 }
             }
         }
     }
+   public static  Boolean checkScaleScore(String[]strings,String str){
+        for (int i=0;i<strings.length;i++){
+            if (str.equals(strings[i])){
+                return true;
+            }
+        }
+        return false;
+    }
     public static void doParagraph(List<XWPFParagraph> paragraphList, XWPFDocument
-            doc, Map < String, String > textMap, Map<String,String> imgMap,ScalePatient scalePatient){
+            doc, Map < String, String > textMap, Map<String,String> imgMap,ScalePatient scalePatient,List<String>questionsList){
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
@@ -224,7 +188,6 @@ public class BprsWord {
                                 }
                             }
                         }
-
 
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445
@@ -272,6 +235,46 @@ public class BprsWord {
                             //单元格合并
                             //mergeCellsHorizontal(tableOne,3,1,2);
                         }
+                        if (text.contains("${table2}")) {
+                            run.setText("", 0);
+                            XmlCursor cursor = paragraph.getCTP().newCursor();
+                            XWPFTable tableTwo = doc.insertNewTbl(cursor);// ---这个是关键
+
+                            // 设置表格宽度，第一行宽度就可以了，这个值的单位，目前我也还不清楚，还没来得及研究
+                            tableTwo.setWidth(8500);
+                            // 表格第一行，对于每个列，必须使用createCell()，而不是getCell()，因为第一行嘛，肯定是属于创建的，没有create哪里来的get呢
+                            XWPFTableRow tableOneRowOne = tableTwo.getRow(0);//行
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.getCell(0), "宋体", "10", 1, "center", "top", "#000000", "#ffffff", "10%", "序号");
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.createCell(), "宋体", "10", 1, "center", "top", "#000000", "#ffffff", "80%", "阳性症状");
+
+                            if (textMap.get("score").equals("0")){
+                                // 表格第二行
+                                XWPFTableRow tableOneRowTwo = tableTwo.createRow();//行
+                                new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(0), "宋体", "10", 0, "center", "top", "#000000", "#ffffff", "10%", "");
+                                new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(1), "宋体", "10", 0, "center", "top", "#000000", "#ffffff", "80%", "无");
+                            }else{
+                                for (int j=0;j<questionsList.size();j++){
+                                    // 表格第二行
+                                    XWPFTableRow tableOneRowTwo = tableTwo.createRow();//行
+                                    new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(0), "宋体", "10", 0, "center", "top", "#000000", "#ffffff", "10%", j+1+"");
+                                    new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(1), "宋体", "10", 0, "center", "top", "#000000", "#ffffff", "80%", "在“高涨”状态下，"+questionsList.get(j));
+
+                                }
+
+                            }
+
+
+                            // 表格第三行
+               /*             XWPFTableRow tableOneRowThree = tableTwo.createRow();//行
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(0), "微软雅黑", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "住院号："+scalePatient.getHospitalNumber());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(1), "微软雅黑", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "病区："+scalePatient.getWard());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(2), "微软雅黑", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "来源："+scalePatient.getSource());
+*/
+
+                            // ....... 可动态添加表格
+                            //单元格合并
+                            //mergeCellsHorizontal(tableOne,3,1,2);
+                        }
 
                     }
                 }
@@ -307,24 +310,64 @@ public class BprsWord {
     public static void doCharts(XWPFDocument doc,List<ScaleScore> scaleScoreList) {
         /**----------------------------处理图表------------------------------------**/
         // 数据准备
+        //
         Long scoreA=0L;
         Long scoreB=0L;
         Long scoreC=0L;
         Long scoreD=0L;
         Long scoreE=0L;
+        Long scoreF=0L;
+        Long scoreG=0L;
+        Long scoreH=0L;
+        Long scoreI=0L;
+        Long scoreJ=0L;
+        String[]strA=new String[]{"1","4","12","27","40","42","48","49","52","53","56","58"};
+        String[]strB=new String[]{"3","9","10","28","38","45","46","51","55","65"};
+        String[]strC=new String[]{"6","21","34","36","37","41","61","69","73"};
+        String[]strD=new String[]{"5","14","15","20","22","26","29","30","31","32","54","71","79"};
+        String[]strE=new String[]{"2","17","23","33","39","57","72","78","80","86"};
+        String[]strF=new String[]{"11","24","63","67","74","81"};
+        String[]strG=new String[]{"13","25","47","50","70","75","82"};
+        String[]strH=new String[]{"8","18","43","68","76","83"};
+        String[]strI=new String[]{"7","16","35","62","77","84","85","87","88","90"};
+        String[]strJ=new String[]{"19","44","59","60","64","66","89"};
+
         for (ScaleScore scaleScore:scaleScoreList){
-            if (scaleScore.getTitle().equals("1")||scaleScore.getTitle().equals("2")||scaleScore.getTitle().equals("5")||scaleScore.getTitle().equals("9")){
+            if (checkScaleScore(strA,scaleScore.getTitle())){
                 scoreA+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("3")||scaleScore.getTitle().equals("13")||scaleScore.getTitle().equals("16")||scaleScore.getTitle().equals("18")){
+            }else if (checkScaleScore(strB,scaleScore.getTitle())){
                 scoreB+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("4")||scaleScore.getTitle().equals("8")||scaleScore.getTitle().equals("12")||scaleScore.getTitle().equals("15")){
+            }else if (checkScaleScore(strC,scaleScore.getTitle())){
                 scoreC+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("6")||scaleScore.getTitle().equals("7")||scaleScore.getTitle().equals("17")){
+            }else if (checkScaleScore(strD,scaleScore.getTitle())){
                 scoreD+=scaleScore.getScore();
-            }else if (scaleScore.getTitle().equals("10")||scaleScore.getTitle().equals("11")||scaleScore.getTitle().equals("14")){
+            }else if (checkScaleScore(strE,scaleScore.getTitle())){
                 scoreE+=scaleScore.getScore();
+            }else if (checkScaleScore(strF,scaleScore.getTitle())){
+                scoreF+=scaleScore.getScore();
+            }else if (checkScaleScore(strG,scaleScore.getTitle())){
+                scoreG+=scaleScore.getScore();
+            }else if (checkScaleScore(strH,scaleScore.getTitle())){
+                scoreH+=scaleScore.getScore();
+            }else if (checkScaleScore(strI,scaleScore.getTitle())){
+                scoreI+=scaleScore.getScore();
+            }else if (checkScaleScore(strJ,scaleScore.getTitle())){
+                scoreJ+=scaleScore.getScore();
             }
         }
+        double s1=(double)(Math.round(scoreA*100/12)/100.0);
+        double s2=(double)(Math.round(scoreB*100/10)/100.0);
+        double s3=(double)(Math.round(scoreC*100/9)/100.0);
+        double s4=(double)(Math.round(scoreD*100/13)/100.0);
+        double s5=(double)(Math.round(scoreE*100/10)/100.0);
+        double s6=(double)(Math.round(scoreF*100/6)/100.0);
+        double s7=(double)(Math.round(scoreG*100/7)/100.0);
+        double s8=(double)(Math.round(scoreH*100/6)/100.0);
+        double s9=(double)(Math.round(scoreI*100/10)/100.0);
+        double s10=(double)(Math.round(scoreJ*100/7)/100.0);
+
+
+        DecimalFormat df = new DecimalFormat(".00");
 /*====================================================================================================*/
        List<String> titleArrA = new ArrayList<String>();// 标题
         titleArrA.add("title");
@@ -340,43 +383,61 @@ public class BprsWord {
 
         // 第一行数据
         Map<String, String> baseA1 = new HashMap<String, String>();
-        baseA1.put("item1", "焦虑忧郁");
-        baseA1.put("item2", scoreA+"");
+        baseA1.put("item1", "躯体化");
+        baseA1.put("item2", s1+"");
 
 
         // 第二行数据
         Map<String, String> baseA2 = new HashMap<String, String>();
-        baseA2.put("item1", "缺乏活力");
-        baseA2.put("item2", scoreB+"");
+        baseA2.put("item1", "强迫症状");
+        baseA2.put("item2", s2+"");
 
 
         // 第三行数据
         Map<String, String> baseA3 = new HashMap<String, String>();
-        baseA3.put("item1", "思维障碍");
-        baseA3.put("item2", scoreC+"");
+        baseA3.put("item1", "人际关系敏感");
+        baseA3.put("item2", s3+"");
         // 第四行数据
         Map<String, String> baseA4 = new HashMap<String, String>();
-        baseA4.put("item1", "激活性");
-        baseA4.put("item2", scoreD+"");
+        baseA4.put("item1", "抑郁");
+        baseA4.put("item2", s4+"");
 
         // 第五行数据
         Map<String, String> baseA5 = new HashMap<String, String>();
-        baseA5.put("item1", "敌对猜疑");
-        baseA5.put("item2", scoreE+"");
+        baseA5.put("item1", "焦虑");
+        baseA5.put("item2", s5+"");
 
         // 第六行数据
-//        Map<String, String> baseA6= new HashMap<String, String>();
-//        baseA6.put("item1", "攻击性");
-//        baseA6.put("item2", "24");
+        Map<String, String> baseA6= new HashMap<String, String>();
+        baseA6.put("item1", "敌对");
+        baseA6.put("item2", s6+"");
 
+        // 第七行数据
+        Map<String, String> baseA7 = new HashMap<String, String>();
+        baseA7.put("item1", "恐怖");
+        baseA7.put("item2", s7+"");
 
+        Map<String, String> baseA8 = new HashMap<String, String>();
+        baseA8.put("item1", "偏执");
+        baseA8.put("item2", s8+"");
+
+        Map<String, String> baseA9 = new HashMap<String, String>();
+        baseA9.put("item1", "精神病性");
+        baseA9.put("item2", s9+"");
+
+        Map<String, String> baseA10 = new HashMap<String, String>();
+        baseA10.put("item1", "其他");
+        baseA10.put("item2", s10+"");
         listItemsByTypeA.add(baseA1);
         listItemsByTypeA.add(baseA2);
         listItemsByTypeA.add(baseA3);
         listItemsByTypeA.add(baseA4);
         listItemsByTypeA.add(baseA5);
-//        listItemsByTypeA.add(baseA6);
-
+        listItemsByTypeA.add(baseA6);
+        listItemsByTypeA.add(baseA7);
+        listItemsByTypeA.add(baseA8);
+        listItemsByTypeA.add(baseA9);
+        listItemsByTypeA.add(baseA10);
         // 获取word模板中的所有图表元素，用map存放
         // 为什么不用list保存：查看doc.getRelations()的源码可知，源码中使用了hashMap读取文档图表元素，
         // 对relations变量进行打印后发现，图表顺序和文档中的顺序不一致，也就是说relations的图表顺序不是文档中从上到下的顺序
@@ -401,6 +462,6 @@ public class BprsWord {
         /*POIXMLDocumentPart poixmlDocumentPart1 = chartsMap.get("/word/charts/chart1.xml");
         new PoiWordTools().replaceBarCharts(poixmlDocumentPart1, titleArr, fldNameArr, listItemsByType);*/
         POIXMLDocumentPart poixmlDocumentPart2 = chartsMap.get("/word/charts/chart1.xml");
-        new PoiWordTools().replaceBarCharts(poixmlDocumentPart2, titleArrA, fldNameArrA, listItemsByTypeA);
+        new PoiWordTools().replaceLineCharts(poixmlDocumentPart2, titleArrA, fldNameArrA, listItemsByTypeA);
     }
 }

@@ -218,6 +218,12 @@ public class ScaleTaskController extends BaseController {
         if (scaleScoreList==null||scaleScoreList.size()==0){
             return AjaxResult.error("未获取到答题信息");
         }
+        ScaleQuestions scaleQuestions=new ScaleQuestions();
+        scaleQuestions.setScaleId(Long.parseLong(scaleTask.getScaleId()));
+        List<ScaleQuestions>scaleQuestionsList = scaleQuestionsService.selectScaleQuestionsList(scaleQuestions);
+        if (scaleQuestionsList==null||scaleQuestionsList.size()==0){
+            return AjaxResult.error("未获取到题目详情");
+        }
         Map<String,String> map=new HashMap<>();
         log.info("scaleId:{}",scaleTask.getScaleId());
         if (scaleTask.getScaleId().equals("9")){
@@ -268,6 +274,34 @@ public class ScaleTaskController extends BaseController {
             String fileName= KrawieckaWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
             map.put(scaleTask.getScaleId(),fileName);
             log.info("下载完成Krawiecka");
+        }
+        if (scaleTask.getScaleId().equals("24")){
+            log.info("开始下载BRMS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/brms.docx";
+            String fileName= BrmsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成BRMS");
+        }
+        if (scaleTask.getScaleId().equals("25")){
+            log.info("开始下载YMPS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/ymps.docx";
+            String fileName= YmpsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成YMPS");
+        }
+        if (scaleTask.getScaleId().equals("26")){
+            log.info("开始下载HCL-32");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hcl-32.docx";
+            String fileName= HclWord.getDld(scalePatient,scaleTask,string,scaleScoreList,scaleQuestionsList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成HCL-32");
+        }
+        if (scaleTask.getScaleId().equals("27")){
+            log.info("开始下载MDQ");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/mdq.docx";
+            String fileName= MdqWord.getDld(scalePatient,scaleTask,string,scaleScoreList,scaleQuestionsList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成MDQ");
         }
         if (scaleTask.getScaleId().equals("29")){
             log.info("开始下载HAMD");
