@@ -310,12 +310,68 @@ public class ScaleTaskController extends BaseController {
             map.put(scaleTask.getScaleId(),fileName);
             log.info("下载完成HAMD");
         }
+        if (scaleTask.getScaleId().equals("30")){
+            log.info("开始下载MADRS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/madrs.docx";
+            String fileName= MadrsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成MADRS");
+        }
+        if (scaleTask.getScaleId().equals("31")){
+            log.info("开始下载NDI");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/ndi.docx";
+            String fileName= NdiWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成NDI");
+        }
+        if (scaleTask.getScaleId().equals("32")){
+            log.info("开始下载EPDS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/epds.docx";
+            String fileName= EpdsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成EPDS");
+        }
+        if (scaleTask.getScaleId().equals("33")){
+            log.info("开始下载CES-D");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hamd.docx";
+            String fileName= CesdWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成CES-D");
+        }
         if (scaleTask.getScaleId().equals("34")){
             log.info("开始下载SDS");
             String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/sds.docx";
             String fileName= SdsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
             map.put(scaleTask.getScaleId(),fileName);
             log.info("下载完成SDS");
+        }
+        if (scaleTask.getScaleId().equals("35")){
+            log.info("开始下载BDI");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/bdi.docx";
+            String fileName= BdiWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成BDI");
+        }
+        if (scaleTask.getScaleId().equals("36")){
+            log.info("开始下载HAD");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/had.docx";
+            String fileName= HadWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成HAD");
+        }
+        if (scaleTask.getScaleId().equals("37")){
+            log.info("开始下载PHQ-9");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/phq-9.docx";
+            String fileName= PhqWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成PHQ-9");
+        }
+        if (scaleTask.getScaleId().equals("38")){
+            log.info("开始下载GDS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/gds.docx";
+            String fileName= GdsWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成GDS");
         }
         if (scaleTask.getScaleId().equals("40")){
             log.info("开始下载HAMA");
@@ -324,12 +380,40 @@ public class ScaleTaskController extends BaseController {
             map.put(scaleTask.getScaleId(),fileName);
             log.info("下载完成HAMA");
         }
+        if (scaleTask.getScaleId().equals("41")){
+            log.info("开始下载STAI");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hama.docx";
+            String fileName= HamaWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成STAI");
+        }
         if (scaleTask.getScaleId().equals("42")){
             log.info("开始下载SAS");
             String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/sas.docx";
             String fileName= SasWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
             map.put(scaleTask.getScaleId(),fileName);
             log.info("下载完成SAS");
+        }
+        if (scaleTask.getScaleId().equals("43")){
+            log.info("开始下载PASS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hama.docx";
+            String fileName= HamaWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成PASS");
+        }
+        if (scaleTask.getScaleId().equals("44")){
+            log.info("开始下载PDSS");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hama.docx";
+            String fileName= HamaWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成PDSS");
+        }
+        if (scaleTask.getScaleId().equals("45")){
+            log.info("开始下载GAD-7");
+            String  string= this.getClass().getResource("/").getPath().toString().replaceAll("%20"," ")+"scaleTemplate/hama.docx";
+            String fileName= HamaWord.getDld(scalePatient,scaleTask,string,scaleScoreList);
+            map.put(scaleTask.getScaleId(),fileName);
+            log.info("下载完成GAD-7");
         }
         return AjaxResult.success(map);
     }

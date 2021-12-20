@@ -96,25 +96,33 @@ public class SdsWord {
              scalePatient.setWard("");
          }
 
+         //
+        Long scoreA=0L;
+        Long score=0L;
+        for (ScaleScore scaleScore:scaleScoreList){
+            scoreA+=scaleScore.getScore();
+        }
+        score=new Double(scoreA*1.25).longValue();
+
         // 文本数据
         Map<String, String> textMap = new HashMap<String, String>();
         String string="";
-        String str="\r\n";
+        String str="";
 
-        Long scoreC=45L;
-        Long score=50L;
+
+
         if (score<53){
-            str="表明您目前不存在抑郁，请继续保持好心情！";
+            string="表明您目前不存在抑郁，请继续保持好心情！";
         }else if (score>=53&&score<63){
-            str="表明您目前存在轻度抑郁。建议进行放松训练或做一些自己感兴趣的事儿，必要时可进行心理治疗。";
+            string="表明您目前存在轻度抑郁。建议进行放松训练或做一些自己感兴趣的事儿，必要时可进行心理治疗。";
         }else if (score>=63&&score<73){
-            str="表明您目前存在中度抑郁。建议进行心理治疗，必要时可使用抗焦虑药物。";
+            string="表明您目前存在中度抑郁。建议进行心理治疗，必要时可使用抗焦虑药物。";
         }else {
-            str="表明您目前存在重度抑郁。建议联合使用药物治疗与心理治疗。";
+            string="表明您目前存在重度抑郁。建议联合使用药物治疗与心理治疗。";
         }
-        textMap.put("varA",scoreC+string);
-        textMap.put("varB",score+string);
-        textMap.put("var", "本次测验标准分为"+score+"分，"+str);
+        textMap.put("varA",scoreA+"");
+        textMap.put("varB",score+"");
+        textMap.put("var", "本次测验标准分为"+score+"分，"+string);
 
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy.MM.dd");
         Date date =new Date();
@@ -200,21 +208,21 @@ public class SdsWord {
                             tableOne.setWidth(8500);
                             // 表格第一行，对于每个列，必须使用createCell()，而不是getCell()，因为第一行嘛，肯定是属于创建的，没有create哪里来的get呢
                             XWPFTableRow tableOneRowOne = tableOne.getRow(0);//行
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.getCell(0), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "姓名："+scalePatient.getPatientName());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.createCell(), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "性别："+scalePatient.getSex());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.createCell(), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "婚姻："+scalePatient.getMaritalStatus());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.getCell(0), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "姓名："+scalePatient.getPatientName());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.createCell(), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "性别："+scalePatient.getSex());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowOne.createCell(), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "婚姻："+scalePatient.getMaritalStatus());
 
                             // 表格第二行
                             XWPFTableRow tableOneRowTwo = tableOne.createRow();//行
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(0), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "年龄："+scalePatient.getAge());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(1), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "文化程度："+scalePatient.getEducation());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(2), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "职业："+scalePatient.getJob());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(0), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "年龄："+scalePatient.getAge());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(1), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "文化程度："+scalePatient.getEducation());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowTwo.getCell(2), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "职业："+scalePatient.getJob());
 
                             // 表格第三行
                             XWPFTableRow tableOneRowThree = tableOne.createRow();//行
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(0), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "住院号："+scalePatient.getHospitalNumber());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(1), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "病区："+scalePatient.getWard());
-                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(2), "宋体", "12", 0, "left", "top", "#000000", "#ffffff", "30%", "来源："+scalePatient.getSource());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(0), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "住院号："+scalePatient.getHospitalNumber());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(1), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "病区："+scalePatient.getWard());
+                            new PoiWordTools().setWordCellSelfStyle(tableOneRowThree.getCell(2), "宋体", "14", 0, "left", "top", "#000000", "#ffffff", "30%", "来源："+scalePatient.getSource());
 
 
                             // ....... 可动态添加表格

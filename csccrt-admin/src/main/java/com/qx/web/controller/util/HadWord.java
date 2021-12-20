@@ -18,13 +18,13 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class KrawieckaWord {
+public class HadWord {
 
     public static String getDld(ScalePatient scalePatient , ScaleTask scaleTask,String templateurl,List<ScaleScore> scaleScoreList) {
         FileSystemView fsv = FileSystemView.getFileSystemView();
         File com=fsv.getHomeDirectory();
         String filenameRandom= RandomStringUtils.randomNumeric(6);
-        String fileName=scalePatient.getPatientName()+"_"+scaleTask.getTestCoding()+filenameRandom+"_krawiecka.docx";  // 结果文件
+        String fileName=scalePatient.getPatientName()+"_"+scaleTask.getTestCoding()+filenameRandom+"_had.docx";  // 结果文件
         String returnurl= ProjectConfig.getDownloadPath()+fileName;
         // 替换word模板数据
         XWPFDocument doc=null;
@@ -64,7 +64,7 @@ public class KrawieckaWord {
      */
     public static void replaceAll(XWPFDocument doc,ScalePatient scalePatient ,ScaleTask scaleTask,List<ScaleScore> scaleScoreList) throws InvalidFormatException, IOException {
         doParagraphs(doc,scalePatient,scaleTask,scaleScoreList); // 处理段落文字数据，包括文字和表格、图片
-//        doCharts(doc);  // 处理图表数据，柱状图、折线图、饼图啊之类的
+//        doCharts(doc,scaleScoreList);  // 处理图表数据，柱状图、折线图、饼图啊之类的
     }
 
 
@@ -93,98 +93,93 @@ public class KrawieckaWord {
          if(scalePatient.getWard()==null){
              scalePatient.setWard("");
          }
-         //
+        //
+
         Long scoreA=0L;
         Long scoreB=0L;
-        Long scoreC=0L;
-        Long scoreD=0L;
-        Long scoreE=0L;
-        Long scoreF=0L;
-        Long scoreG=0L;
-        Long scoreH=0L;
-
         Long score=0L;
         for (ScaleScore scaleScore:scaleScoreList){
-            if (scaleScore.getTitle().equals("1")){ scoreA=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("2")){ scoreB=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("3")){ scoreC=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("4")){ scoreD=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("5")){ scoreE=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("6")){ scoreF=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("7")){ scoreG=scaleScore.getScore(); }
-            if (scaleScore.getTitle().equals("8")){ scoreH=scaleScore.getScore(); }
+            score+=scaleScore.getScore();
+            if (scaleScore.getTitle().equals("1")||scaleScore.getTitle().equals("3")||scaleScore.getTitle().equals("5")
+                    ||scaleScore.getTitle().equals("7")||scaleScore.getTitle().equals("9")||scaleScore.getTitle().equals("11")
+                    ||scaleScore.getTitle().equals("13")){
+                scoreA+=scaleScore.getScore();
+            }else if (scaleScore.getTitle().equals("2")||scaleScore.getTitle().equals("4")||scaleScore.getTitle().equals("6")
+                    ||scaleScore.getTitle().equals("8")||scaleScore.getTitle().equals("10")||scaleScore.getTitle().equals("12")
+                    ||scaleScore.getTitle().equals("14")){
+                scoreB+=scaleScore.getScore();
+            }
         }
+
+
+
         // 文本数据
         Map<String, String> textMap = new HashMap<String, String>();
         String string="";
-        String str="";
-        String str1="";
-        String n="\r";
-        List<String>strings=new ArrayList<>();
+        String strA="";
+        String strB="";
+        String s1="请继续保持好心情。";
+        String s2="需要做进一步的检查。";
+        String s3="可尝试做一些令你感到愉快的事儿，使身心放松。";
+        String s4="可尝试想一些开心的事儿，转移注意力。";
+        String s5="建议及时寻求专业的心理治疗。";
+        String s6="必要时可结合药物治疗。";
 
-        if (scoreA<2&&scoreB<2&&scoreC<2&&scoreD<2&&scoreE<2&&scoreF<2&&scoreG<2&&scoreH<2){
-            string="无明显的精神病性症状。";
-        }else if (scoreA<3&&scoreB<3&&scoreC<3&&scoreD<3&&scoreE<3&&scoreF<3&&scoreG<3&&scoreH<3){
-            if (scoreA==2){strings.add("抑郁");}
-            if (scoreB==2){strings.add("焦虑");}
-            if (scoreC==2){strings.add("情感平淡或不协调");}
-            if (scoreD==2){strings.add("精神运动性迟缓");}
-            if (scoreE==2){strings.add("妄想");}
-            if (scoreF==2){strings.add("幻觉");}
-            if (scoreG==2){strings.add("言语散漫或不连贯");}
-            if (scoreH==2){strings.add("言语贫乏与缄默");}
-            for (String s:strings){
-                if (s!=strings.get(strings.size()-1)){
-                    str+=(s+"、");
-                }else {
-                    str+=s;
-                }
-            }
-            string="其中"+str+"症状（得分为2的项目）达到病态程度。";
-        }else {
-            if (scoreA>=3){ strings.add("抑郁");
-            str1+=n+"抑郁：感到抑郁苦闷，交谈时表现出沮丧的神态、悲伤的面容或心灰意懒的模样。";
-            }
-            if (scoreB>=3){strings.add("焦虑");
-                str1+=n+"焦虑：感到焦虑无法松弛，可能出现交感神经活动亢进的生理体征，如：手掌出汗、轻度颤抖、皮肤发红等，严重时会出现运动性激越。";
-            }
-            if (scoreC>=3){strings.add("情感平淡或不协调");
-                str1+=n+"情感平淡或不协调：应该有的情感反应在幅度和范围上有缺损，在谈到自己情况时并不表达出客观事件对自己的心理影响，如谈到亲近的人们时没有热情。";
-            }
-            if (scoreD>=3){strings.add("精神运动性迟缓");
-                str1+=n+"精神运动性迟缓：表现为思维、语言及—般动作的缓慢或缺乏主动性，严重时发展到抑郁性、木僵，此时自主动作完全消失。";
-            }
-            if (scoreE>=3){strings.add("妄想");
-                str1+=n+"妄想：表现为思维内容的异常，会产生一些错误观念，及坚信的妄想。";
-            }
-            if (scoreF>=3){strings.add("幻觉");
-                str1+=n+"幻觉：表现为知觉方面的异常，在没有相应外界刺激的情况下发生虚幻的知觉。";
-            }
-            if (scoreG>=3){ strings.add("言语散漫或不连贯");
-                str1+=n+"言语散漫或不连贯：言语上杂乱，没有主题，交流时言语不连贯，让人难以理解。";
-            }
-            if (scoreH>=3){strings.add("言语贫乏与缄默");
-                str1+=n+"言语贫乏与缄默：自发言语的语量有限，回答问题简单肤浅，很少有自发的补充说明，很可能是单词甚至不回答，严重时很难做有意义的交谈。";
-            }
-            for (String s:strings){
-                if (s!=strings.get(strings.size()-1)){
-                    str+=(s+"、");
-                }else {
-                    str+=s;
-                }
-            }
-            string="其中在"+str+"症状上（呈现得分≥3的项目）表现突出。具体表现为："+str1;
-        }
-        score=scoreA+scoreB+scoreC+scoreD+scoreE+scoreF+scoreG+scoreH;
         textMap.put("varA",scoreA+"");
         textMap.put("varB",scoreB+"");
-        textMap.put("varC",scoreC+"");
-        textMap.put("varD",scoreD+"");
-        textMap.put("varE",scoreE+"");
-        textMap.put("varF",scoreF+"");
-        textMap.put("varG",scoreG+"");
-        textMap.put("varH",scoreH+"");
-        textMap.put("var", "本次测验总分为"+score+"分，"+string);
+        textMap.put("varC",score+"");
+        boolean flagA1=false;
+        boolean flagA2=false;
+        boolean flagA3=false;
+        boolean flagB1=false;
+        boolean flagB2=false;
+        boolean flagB3=false;
+        if (scoreA<=7){
+            strA="您目前无抑郁症状，";
+            flagA1=true;
+        }else if (scoreA>=8&&scoreA<=10){
+            strA="您目前可能存在抑郁症状，";
+            flagA2=true;
+        }else if (scoreA>=11){
+            strA="您目前存在抑郁症状，";
+            flagA3=true;
+        }
+        if (scoreB<=7){
+            strB="无焦虑症状。";
+            flagB1=true;
+        }else if (scoreB>=8&&scoreB<=10){
+            strB="可能存在焦虑症状。";
+            flagB2=true;
+        }else if (scoreB>=11){
+            strB="存在焦虑症状。";
+            flagB3=true;
+        }
+        if (flagA1){
+            if (flagB1){
+                string=s1;
+            }else if (flagB2){
+                string=s2+s3;
+            }else if(flagB3){
+                string=s5;
+            }
+        }else if (flagA2){
+            if (flagB1){
+                string=s2+s4;
+            }else if (flagB2){
+                string=s2+s5;
+            }else if(flagB3){
+                string=s5;
+            }
+        }else if (flagA3){
+            if (flagB1){
+                string=s5;
+            }else if (flagB2){
+                string=s2+s5;
+            }else if(flagB3){
+                string=s5+s6;
+            }
+        }
+        textMap.put("var", "本次测验总分为"+score+"分，其中抑郁分量表得分为"+scoreA+"分，焦虑分量表得分为"+scoreB+"分，表明"+strA+strB+string);
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy.MM.dd");
         Date date =new Date();
         String f=sdf.format(date);
@@ -214,9 +209,7 @@ public class KrawieckaWord {
         if (paragraphList != null && paragraphList.size() > 0) {
             for (XWPFParagraph paragraph : paragraphList) {
                 List<XWPFRun> runs = paragraph.getRuns();
-                for (int i =0;i<runs.size();i++){
-//                for (XWPFRun run : runs) {
-                    XWPFRun run =runs.get(i);
+                for (XWPFRun run : runs) {
                     String text = run.getText(0);
                     if (text != null) {
 
@@ -225,26 +218,7 @@ public class KrawieckaWord {
                         String key = tempText.replaceAll("\\{\\{", "").replaceAll("}}", "");
                         if (!StringUtils.isEmpty(textMap.get(key))) {
                             run.setText(textMap.get(key), 0);
-                            String runText=textMap.get(key);
-                            if (runText.indexOf("\r")>0){
-                                String[]texts =runText.split("\r");
-                                //直接调用XWPFRun的setText( )方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
-                                //所以我们不能直接设值，需要先删除当前run ,然后再自己手动插入一个新的run。
-                                paragraph.removeRun(i);
-                                run=paragraph.insertNewRun(i);
-                                for (int f=0;f<texts.length;f++){
-                                    if(f==0){
-                                        run.setText(texts[f].trim());
-                                    }else {
-//                                        run.addCarriageReturn();
-                                        run.addBreak();
-                                        run.setText("    "+texts[f].trim());
-                                    }
-
-                                }
-                            }
                         }
-
 
 
                         // 替换图片内容 参考：https://blog.csdn.net/a909301740/article/details/84984445
@@ -324,9 +298,39 @@ public class KrawieckaWord {
             }
         }
     }
-    public static void doCharts(XWPFDocument doc) {
+    public static void doCharts(XWPFDocument doc,List<ScaleScore> scaleScoreList) {
         /**----------------------------处理图表------------------------------------**/
         // 数据准备
+        //
+        Long score1=0L;
+        Long score2=0L;
+        Long score3=0L;
+        Long score4=0L;
+        Long score5=0L;
+        Long score6=0L;
+        for (ScaleScore scaleScore:scaleScoreList){
+            if (scaleScore.getTitle().equals("8")||scaleScore.getTitle().equals("9")
+                    ||scaleScore.getTitle().equals("21")|| scaleScore.getTitle().equals("24")){
+                score1+=scaleScore.getScore();
+            } else if (scaleScore.getTitle().equals("2")||scaleScore.getTitle().equals("3")
+                    ||scaleScore.getTitle().equals("5")|| scaleScore.getTitle().equals("23")){
+                score2+=scaleScore.getScore();
+            }else if (scaleScore.getTitle().equals("4")||scaleScore.getTitle().equals("18")
+                    ||scaleScore.getTitle().equals("19")){
+                score3+=scaleScore.getScore();
+            }else if (scaleScore.getTitle().equals("6")||scaleScore.getTitle().equals("7")
+                    ||scaleScore.getTitle().equals("22")){
+                score4+=scaleScore.getScore();
+            }else if (scaleScore.getTitle().equals("15")||scaleScore.getTitle().equals("16")
+                    ||scaleScore.getTitle().equals("17")|| scaleScore.getTitle().equals("20")){
+                score5+=scaleScore.getScore();
+            }
+            if (scaleScore.getTitle().equals("4")||scaleScore.getTitle().equals("7")
+                    ||scaleScore.getTitle().equals("20")|| scaleScore.getTitle().equals("31")
+                    || scaleScore.getTitle().equals("32")|| scaleScore.getTitle().equals("33")){
+                score6+=scaleScore.getScore();
+            }
+        }
 /*====================================================================================================*/
        List<String> titleArrA = new ArrayList<String>();// 标题
         titleArrA.add("title");
@@ -343,33 +347,33 @@ public class KrawieckaWord {
         // 第一行数据
         Map<String, String> baseA1 = new HashMap<String, String>();
         baseA1.put("item1", "反应缺乏");
-        baseA1.put("item2", "12");
+        baseA1.put("item2", score1+"");
 
 
         // 第二行数据
         Map<String, String> baseA2 = new HashMap<String, String>();
         baseA2.put("item1", "思维障碍");
-        baseA2.put("item2", "20");
+        baseA2.put("item2", score2+"");
 
 
         // 第三行数据
         Map<String, String> baseA3 = new HashMap<String, String>();
         baseA3.put("item1", "激活性");
-        baseA3.put("item2", "12");
+        baseA3.put("item2", score3+"");
         // 第四行数据
         Map<String, String> baseA4 = new HashMap<String, String>();
         baseA4.put("item1", "偏执");
-        baseA4.put("item2", "15");
+        baseA4.put("item2", score4+"");
 
         // 第五行数据
         Map<String, String> baseA5 = new HashMap<String, String>();
         baseA5.put("item1", "抑郁");
-        baseA5.put("item2", "16");
+        baseA5.put("item2", score5+"");
 
         // 第六行数据
         Map<String, String> baseA6= new HashMap<String, String>();
         baseA6.put("item1", "攻击性");
-        baseA6.put("item2", "24");
+        baseA6.put("item2", score6+"");
 
 
         listItemsByTypeA.add(baseA1);
